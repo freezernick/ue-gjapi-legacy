@@ -205,6 +205,25 @@ bool UUEGameJoltAPI::AuthUser()
 	return true;
 }
 
+void UUEGameJoltAPI::Login(FString name, FString token)
+{
+	FString output;
+	FString GameIDString = FString::FromInt(Game_ID);
+	bool ret = SendRequest(output, TEXT("/users/auth/?format=json&game_id=") + GameIDString + TEXT("&username=") + name + TEXT("&user_token=") + token);
+	if (ret) 
+	{
+		UE_LOG(GJAPI, Log, TEXT("User logged in."));
+		UserName = name;
+		UserToken = token;
+		m_LoggedIn = true;
+	} 
+	else 
+	{
+		UE_LOG(GJAPI, Warning, TEXT("Could not authenticate user."));
+	}
+}
+
+
 /**
 * Check if the user has logged in Succesfully
 *
@@ -534,7 +553,7 @@ TArray<FScoreInfo> UUEGameJoltAPI::GetScoreboard()
 *	@return	bool			True if it  Succeed False if it Fails
 *
 */
-bool UUEGameJoltAPI::AddScore(FString UserScore, int32 UserScore_Sort, int32 Scoreboard_ID, FString GuestUser, FString extra_data, int32 table_id)
+bool UUEGameJoltAPI::AddScore(FString UserScore, int32 UserScore_Sort, FString GuestUser, FString extra_data, int32 table_id)
 {
 	bool ret = true;
 	FString output;
