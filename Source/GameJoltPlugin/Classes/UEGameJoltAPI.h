@@ -201,17 +201,20 @@ public:
 		bool SetGamePrivateKey(FString f_game_PrivateKey);
 	UFUNCTION(BlueprintPure, meta = (DisplayName = "Get Username"), Category = "GameJolt")
 		FString GetUsername();
-	UFUNCTION(Blueprintcallable, meta = (DisplayName = "Set Username"), Category = "GameJolt")
+	UFUNCTION(Blueprintcallable, meta = (DeprecatedFunction, DeprecationMessage= "'Set Username' is deprecated. Please use 'Login' instead.", DisplayName = "Set Username"), Category = "GameJolt")
 		bool SetUserName(FString f_Username);
 	UFUNCTION(BlueprintPure, meta = (DisplayName = "Get User Token"), Category = "GameJolt")
 		FString GetUserToken();
-	UFUNCTION(Blueprintcallable, meta = (DisplayName = "Set User Token"), Category = "GameJolt")
+	UFUNCTION(Blueprintcallable, meta = (DeprecatedFunction, DeprecationMessage = "'Set User Token' is deprecated. Please use 'Login' instead.",DisplayName = "Set User Token"), Category = "GameJolt")
 		bool SetUserToken(FString f_UserToken);
 
 
 	// By FreezerNick
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Init"), Category = "GameJolt|Init")
 		void Init(FString PrivateKey, int32 GameID);
+
+	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Login"), Category = "GameJolt|User")
+		void Login(FString Name, FString Token);
 
 	//Sessions - by FreezerNick
 	UFUNCTION(BlueprintCallable, meta = (DislayName = "Open Session"), Category = "GameJolt|Sessions")
@@ -222,9 +225,6 @@ public:
 
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Close Session"), Category = "GameJolt|Sessions")
 		bool CloseSession();
-	// End of work by FreezerNick
-
-	// More stuff by FreezerNick
 
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Get Server Time"), Category = "GameJolt|Misc")
 		int32 GetServerTime();
@@ -237,7 +237,7 @@ public:
 	// User Stuff
 
 	//Login 
-	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Login User"), Category = "GameJolt")
+	UFUNCTION(BlueprintCallable, meta = (DeprecatedFunction, DeprecationMessage = "'Login User' is deprecated. Use 'Login' instead.", DisplayName = "Login User"), Category = "GameJolt")
 		bool AuthUser();
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Is User Login"), Category = "GameJolt")
 		bool isUserAuthorize();
