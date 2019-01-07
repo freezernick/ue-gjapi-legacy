@@ -265,7 +265,7 @@ public:
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Get Scoreboard"), Category = "GameJolt")
 		TArray<FScoreInfo> GetScoreboard();
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Add Score to Scoreboard"), Category = "GameJolt")
-		bool AddScore(FString UserScore, int32 UserScore_Sort, int32 Scoreboard_ID, FString GuestUser, FString extra_data, int32 table_id);
+		bool AddScore(FString UserScore, int32 UserScore_Sort, FString GuestUser, FString extra_data, int32 table_id);
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Fetch Scoreboard Table"), Category = "GameJolt")
 		bool FetchScoreboardTable();
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Get Scoreboard Table"), Category = "GameJolt")
