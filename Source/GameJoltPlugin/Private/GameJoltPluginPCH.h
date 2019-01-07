@@ -7,6 +7,8 @@
 #include "Map.h"
 #include "Json.h"
 #include "Classes/UEGameJoltAPI.h"
+
+DECLARE_LOG_CATEGORY_EXTERN(GJAPI, Log, All);
 // #include "ImageWrapper.h"
 
 

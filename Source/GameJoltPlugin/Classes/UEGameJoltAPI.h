@@ -8,7 +8,6 @@ By JvtheWanderer
 /**
  * 
  */
-//DECLARE_LOG_CATEGORY_EXTERN(AuthorizeError, Log, All);
 
 // Generate a delegate for the OnGetResult event
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnGetResult);
