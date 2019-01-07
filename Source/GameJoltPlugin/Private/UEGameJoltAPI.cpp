@@ -534,7 +534,7 @@ TArray<FScoreInfo> UUEGameJoltAPI::GetScoreboard()
 *	@return	bool			True if it  Succeed False if it Fails
 *
 */
-bool UUEGameJoltAPI::AddScore(FString UserScore, int32 UserScore_Sort, int32 Scoreboard_ID, FString GuestUser, FString extra_data, int32 table_id)
+bool UUEGameJoltAPI::AddScore(FString UserScore, int32 UserScore_Sort, FString GuestUser, FString extra_data, int32 table_id)
 {
 	bool ret = true;
 	FString output;
