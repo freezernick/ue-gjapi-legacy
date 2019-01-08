@@ -1,4 +1,5 @@
-// Copyright 1998-2015 Epic Games, Inc. All Rights Reserved.
+// Copyright (c) 2019 Free2Play-Entertainment
+
 #pragma once
 
 #include "Engine.h"
@@ -9,9 +10,3 @@
 #include "Classes/UEGameJoltAPI.h"
 
 DECLARE_LOG_CATEGORY_EXTERN(GJAPI, Log, All);
-// #include "ImageWrapper.h"
-
-
-//#include "Classes/UEGameJoltTrophies.h"
-//#include "StdAfx.h"
-//#include "GameJoltAPI.h"
