@@ -1,5 +1,6 @@
-#pragma once
+// Copyright (c) 2019 Free2Play-Entertainment
 
+#pragma once
 
 class GameJoltPlugin : public IModuleInterface
 {
