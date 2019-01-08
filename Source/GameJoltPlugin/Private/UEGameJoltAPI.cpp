@@ -210,8 +210,7 @@ void UUEGameJoltAPI::Login(FString name, FString token)
 {
 	FString output;
 	FString GameIDString = FString::FromInt(Game_ID);
-	bool ret = SendRequest(output, TEXT("/users/auth/?format=json&game_id=") + GameIDString + TEXT("&username=") + name + TEXT("&user_token=") + token);
-	return ret;
+	SendRequest(output, TEXT("/users/auth/?format=json&game_id=") + GameIDString + TEXT("&username=") + name + TEXT("&user_token=") + token);
 }
 
 
