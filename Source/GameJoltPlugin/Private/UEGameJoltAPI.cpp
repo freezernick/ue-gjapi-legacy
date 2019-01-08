@@ -1,15 +1,8 @@
-// Copyright 1998-2015 Epic Games, Inc. All Rights Reserved.
-/*
-		By JvtheWanderer 
-*/
+// Copyright (c) 2019 Free2Play-Entertainment
+
 #include "GameJoltPluginPCH.h"
 
-/////
-// UGameJoltAPI
-////
-/**
-*  Constructor
-*/
+/* Constructor */
 UUEGameJoltAPI::UUEGameJoltAPI(const class FObjectInitializer& PCIP)
 : Super(PCIP)
 {
@@ -26,7 +19,8 @@ UUEGameJoltAPI::UUEGameJoltAPI(const class FObjectInitializer& PCIP)
 	
 	
 }
-/**
+
+/*
 *	Get the Game ID
 *
 *	@return Game_ID
@@ -36,13 +30,19 @@ int32 UUEGameJoltAPI::GetGameID()
 	return Game_ID;
 }
 
-// By FreezerNick
+/*
+	Initializes GameJolt API
+*/
 void UUEGameJoltAPI::Init(FString PrivateKey, int32 GameID)
 {
 	Game_ID = GameID;
 	Game_PrivateKey = PrivateKey;
 }
 
+/*
+	FOR TESTING
+	Gets time of the GameJolt servers
+*/
 int32 UUEGameJoltAPI::GetServerTime()
 {
 	bool ret;
@@ -54,9 +54,9 @@ int32 UUEGameJoltAPI::GetServerTime()
 	fasd = 20;
 	return fasd;
 }
-// End of work by FreezerNick
 
-/**
+/*
+*	DEPRECATED
 *	Set the Game ID
 *
 *	@param f_Game_ID
@@ -82,7 +82,8 @@ FString UUEGameJoltAPI::GetGamePrivateKey()
 	return Game_PrivateKey;
 }
 
-/**
+/*
+*	DEPRECATED
 *	Set the Game Private Key
 *
 *	@param F_game_PrivateKey	Games Private Key
@@ -282,8 +283,6 @@ void UUEGameJoltAPI::LogInStatus()
 
 }
 
-// By FreezerNick
-
 bool UUEGameJoltAPI::OpenSession()
 {
 	bool ret;
@@ -295,6 +294,9 @@ bool UUEGameJoltAPI::OpenSession()
 	return true;
 }
 
+/*
+	Pings the Session. Every 30 to 60 seconds is good.
+*/
 bool UUEGameJoltAPI::PingSession()
 {
 	bool ret;
@@ -306,6 +308,9 @@ bool UUEGameJoltAPI::PingSession()
 	return true;
 }
 
+/*
+	Closes the Session.
+*/
 bool UUEGameJoltAPI::CloseSession()
 {
 	bool ret;
@@ -317,8 +322,6 @@ bool UUEGameJoltAPI::CloseSession()
 		TEXT("&user_token=") + UserToken);
 	return true;
 }
-
-// End of work by FreezerNick
 
 /***
 * Get the array of users for Gamejolt and put it in a array of FUserInfo
@@ -861,70 +864,6 @@ FString UUEGameJoltAPI::CreateURL(FString inputURL) {
 	return inputURL;
 }
 
-/**TODO: Work on EncodeURL and Char2Hex to add some Protection to username and User Token
-*/
-//FString UUEGameJoltAPI::EncodeURL(FString inputString)
-//{
-//	FString escapedString = "";
-//	int32 max = inputString.Len();
-//
-//	for (int32 i = 0; i < max; i++)
-//	{
-//		if
-//			(
-//				(48 <= inputString[i] && inputString[i] <= 57) || //0-9
-//				(65 <= inputString[i] && inputString[i] <= 90) || //abc...xyz
-//				(97 <= inputString[i] && inputString[i] <= 122) || //ABC...XYZ
-//				(
-//				inputString[i] == '~' || inputString[i] == '!' ||
-//				inputString[i] == '*' || inputString[i] == '(' ||
-//				inputString[i] == ')' || inputString[i] == '\''
-//				)
-//			)
-//		{
-//			escapedString += inputString[i];
-//		}
-//		else
-//		{
-//			escapedString += _T("%");
-//			escapedString += Char2Hex(inputString, i); //converts char 255 to string "ff"
-//		}
-//	}
-//
-//	return "a";
-//}
-//
-//FString UUEGameJoltAPI::Char2Hex(FString character, int32 index)
-//{
-//
-//	return "b";
-//}
-
-/**
-*TODO: Work on Funtionality of GetImgURL
-*/
-/* bool UUEGameJoltAPI::GetIMGURL(const FString& output, FString url)
-{
-	FString outStr;
-
-	GameJoltComponentEnum = EGameJoltComponentEnum::GJ_OTHER;
-	TSharedRef<TJsonWriter<TCHAR>> JsonWriter = TJsonWriterFactory<TCHAR>::Create(&outStr);
-	//Start writing the response
-	WriteObject(JsonWriter, "", new FJsonValueObject(Data));
-	JsonWriter->Close();
-	TSharedRef< IHttpRequest > HttpRequest = FHttpModule::Get().CreateRequest();
-	HttpRequest->SetVerb("POST");
-	HttpRequest->SetURL(CreateURL(url));
-	HttpRequest->SetHeader("Content-Type", "application/json");
-	HttpRequest->SetContentAsString(output);
-
-	HttpRequest->OnProcessRequestComplete().BindUObject(this, &UUEGameJoltAPI::OnReady);
-	HttpRequest->ProcessRequest();
-
-	return true;
-}
-*/
-
 /**
 * Creates new data from the
 *
@@ -975,6 +914,6 @@ void UUEGameJoltAPI::Reset()
 		Data.Reset();
 	}
 
-	//create a New JSON object
+	// Created a new JSON Object
 	Data = MakeShareable(new FJsonObject());
 }
