@@ -55,20 +55,6 @@ int32 UUEGameJoltAPI::GetServerTime()
 	return fasd;
 }
 
-/*
-*	DEPRECATED
-*	Set the Game ID
-*
-*	@param f_Game_ID
-*
-*	@return true
-*/
-bool UUEGameJoltAPI::SetGameID(int32 f_game_ID)
-{
-	Game_ID = f_game_ID;
-		return true;
-}
-
 
 /**
 *	Get the Game Private Key
@@ -80,20 +66,6 @@ bool UUEGameJoltAPI::SetGameID(int32 f_game_ID)
 FString UUEGameJoltAPI::GetGamePrivateKey()
 {
 	return Game_PrivateKey;
-}
-
-/*
-*	DEPRECATED
-*	Set the Game Private Key
-*
-*	@param F_game_PrivateKey	Games Private Key
-*
-*	@return true
-*/
-bool UUEGameJoltAPI::SetGamePrivateKey(FString f_game_PrivateKey)
-{
-	Game_PrivateKey = f_game_PrivateKey;
-	return true;
 }
 
 /**
