@@ -10,6 +10,7 @@ namespace UnrealBuildTool.Rules
 	{
         public GameJoltPlugin(ReadOnlyTargetRules Target) : base (Target)
 		{
+		    PrivatePCHHeaderFile = "Private/GameJoltPluginPCH.h";
 			PublicIncludePaths.AddRange(
 				new string[] {
 					// ... add public include paths required here ...

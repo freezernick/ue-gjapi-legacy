@@ -1,6 +1,7 @@
 // Copyright (c) 2019 Free2Play-Entertainment
 
 #pragma once
+#include "IHttpRequest.h"
 #include "UEGameJoltAPI.generated.h"
 
 // Generate a delegate for the OnGetResult event
