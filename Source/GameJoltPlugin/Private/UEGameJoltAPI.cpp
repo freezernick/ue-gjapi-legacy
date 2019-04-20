@@ -232,7 +232,18 @@ bool UUEGameJoltAPI::isUserAuthorize()
 		return false;
 	}
 	outAuthorize = responseField->GetBool("success");
-	return outAuthorize;
+	if (outAuthorize)
+	{
+		m_LoggedIn = true;
+		bGuest = false;
+		return true;
+	} 
+	else
+	{
+		m_LoggedIn = false;
+		bGuest = true;
+		return false;
+	}
 }
 /**
 * Returns the Users info from Gamejolt
