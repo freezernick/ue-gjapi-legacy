@@ -10,9 +10,9 @@ UUEGameJoltAPI::UUEGameJoltAPI(const class FObjectInitializer& PCIP)
 
 	m_LoggedIn = false;
 	bGuest = true;
-	GJAPI_SERVER = "gamejolt.com";
+	GJAPI_SERVER = "api.gamejolt.com";
 	GJAPI_ROOT = "/api/game/";
-	GJAPI_VERSION = "v1";
+	GJAPI_VERSION = "v1_2";
 	Game_ID = 0;
 	Game_PrivateKey = "";
 	GameJoltComponentEnum = EGameJoltComponentEnum::GJ_USER_AUTH;
@@ -50,23 +50,7 @@ int32 UUEGameJoltAPI::GetServerTime()
 	FString output;
 	GameIDString = FString::FromInt(Game_ID);
 	ret = SendRequest12(output, TEXT("time/?format=json&game_id=") + GameIDString);
-	int32 fasd;
-	fasd = 20;
-	return fasd;
-}
-
-/*
-*	DEPRECATED
-*	Set the Game ID
-*
-*	@param f_Game_ID
-*
-*	@return true
-*/
-bool UUEGameJoltAPI::SetGameID(int32 f_game_ID)
-{
-	Game_ID = f_game_ID;
-		return true;
+	return true;
 }
 
 
@@ -80,20 +64,6 @@ bool UUEGameJoltAPI::SetGameID(int32 f_game_ID)
 FString UUEGameJoltAPI::GetGamePrivateKey()
 {
 	return Game_PrivateKey;
-}
-
-/*
-*	DEPRECATED
-*	Set the Game Private Key
-*
-*	@param F_game_PrivateKey	Games Private Key
-*
-*	@return true
-*/
-bool UUEGameJoltAPI::SetGamePrivateKey(FString f_game_PrivateKey)
-{
-	Game_PrivateKey = f_game_PrivateKey;
-	return true;
 }
 
 /**
@@ -752,7 +722,7 @@ bool UUEGameJoltAPI::SendRequest12(const FString& output, FString url)
 	JsonWriter->Close();
 	//Create URL First
 
-	url = TEXT("http://") + GJAPI_SERVER + GJAPI_ROOT + TEXT("v1.2") + url;
+	url = TEXT("https://") + GJAPI_SERVER + GJAPI_ROOT + TEXT("v1.2") + url;
 	//UE_LOG(GJAPI, Error, TEXT("%s"), *url);
 	FString signature(FMD5::HashAnsiString(*(url + Game_PrivateKey))); //+ GJAPI_SERVER + url + Game_PrivateKey(TEXT("http://") + GJAPI_SERVER +
 	url += TEXT("&signature=") + signature;
@@ -788,7 +758,7 @@ bool UUEGameJoltAPI::SendRequest(const FString& output, FString url)
 	JsonWriter->Close();
 	//Create URL First
 
-	url = TEXT("http://") + GJAPI_SERVER + GJAPI_ROOT + GJAPI_VERSION + url;
+	url = TEXT("https://") + GJAPI_SERVER + GJAPI_ROOT + GJAPI_VERSION + url;
 	//UE_LOG(GJAPI, Error, TEXT("%s"), *url);
 	FString signature(FMD5::HashAnsiString(*(url + Game_PrivateKey))); //+ GJAPI_SERVER + url + Game_PrivateKey(TEXT("http://") + GJAPI_SERVER +
 	url += TEXT("&signature=") + signature;
