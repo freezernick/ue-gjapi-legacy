@@ -200,18 +200,10 @@ public:
 	UFUNCTION(BlueprintPure, meta = (DisplayName = "Get Your Game ID"), Category = "GameJolt")
 	int32 GetGameID();
 
-	/* DEPRECATED - Sets GameID */
-	UFUNCTION(Blueprintcallable, meta = (DeprecatedFunction, DeprecationMessage = "'SetGameID' is deprecated and will be removed in version 1.3. Use 'Init' instead.", DisplayName = "Set Your Game ID"), Category = "GameJolt")
-	bool SetGameID(int32 f_game_ID);
-
 	/* Gets Private Key */
 	UFUNCTION(BlueprintPure, meta = (DisplayName = "Get Your Game Private Key"), Category = "GameJolt")
 	FString GetGamePrivateKey();
-
-	/* DEPRECATED - Sets Private Key */
-	UFUNCTION(Blueprintcallable, meta = (DeprecatedFunction, DeprecationMessage = "'SetGamePrivateKey' is deprecated and will be removed in version 1.3. Use 'Init' instead.", DisplayName = "Set Your Game Private Key"), Category = "GameJolt")
-	bool SetGamePrivateKey(FString f_game_PrivateKey);
-
+	
 	/* Gets Username */
 	UFUNCTION(BlueprintPure, meta = (DisplayName = "Get Username"), Category = "GameJolt")
 	FString GetUsername();
