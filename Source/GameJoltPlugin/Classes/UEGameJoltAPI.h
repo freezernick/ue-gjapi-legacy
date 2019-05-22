@@ -1,6 +1,7 @@
 // Copyright (c) 2019 Free2Play-Entertainment
 
 #pragma once
+#include "IHttpRequest.h"
 #include "UEGameJoltAPI.generated.h"
 
 // Generate a delegate for the OnGetResult event
@@ -12,8 +13,8 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnFailed);
 UENUM(BlueprintType)		//"BlueprintType" is essential to include
 enum class EGameJoltComponentEnum : uint8
 {
-	GJ_USER_AUTH 	UMETA(DisplayName = "Authorize User"),
-	GJ_USER_FETCH 	UMETA(DisplayName = "Fetch User"),
+	GJ_USER_AUTH		UMETA(DisplayName = "Authorize User"),
+	GJ_USER_FETCH		UMETA(DisplayName = "Fetch User"),
 	GJ_SESSION_OPEN	    UMETA(DisplayName = "Open Session"),
 	GJ_SESSION_PING 	UMETA(DisplayName = "Ping Session"),
 	GJ_SESSION_CLOSE 	UMETA(DisplayName = "Close Session"),
@@ -207,19 +208,10 @@ public:
 	/* Gets Username */
 	UFUNCTION(BlueprintPure, meta = (DisplayName = "Get Username"), Category = "GameJolt")
 	FString GetUsername();
-	
-	/* DEPRECATED - Sets Username */
-	UFUNCTION(Blueprintcallable, meta = (DeprecatedFunction, DeprecationMessage= "'Set Username' is deprecated. Please use 'Login' instead.", DisplayName = "Set Username"), Category = "GameJolt")
-	bool SetUserName(FString f_Username);
 
 	/* Gets Token */
 	UFUNCTION(BlueprintPure, meta = (DisplayName = "Get User Token"), Category = "GameJolt")
 	FString GetUserToken();
-
-	/* DEPRECATED - Sets Token */
-	UFUNCTION(Blueprintcallable, meta = (DeprecatedFunction, DeprecationMessage = "'Set User Token' is deprecated. Please use 'Login' instead.",DisplayName = "Set User Token"), Category = "GameJolt")
-	bool SetUserToken(FString f_UserToken);
-
 
 	/* Initializes GameJolt API */
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Init"), Category = "GameJolt|Init")
@@ -251,10 +243,7 @@ public:
 
 	// User Stuff
 
-	/* DEPRECATED - Logins the User */
-	UFUNCTION(BlueprintCallable, meta = (DeprecatedFunction, DeprecationMessage = "'Login User' is deprecated. Use 'Login' instead.", DisplayName = "Login User"), Category = "GameJolt")
-	bool AuthUser();
-
+	/* Is User logged in? */
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Is User Login"), Category = "GameJolt")
 	bool isUserAuthorize();
 
