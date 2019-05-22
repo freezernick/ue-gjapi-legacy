@@ -117,7 +117,7 @@ struct FScoreTableInfo
 
 
 UCLASS(BlueprintType, Blueprintable)
-class UUEGameJoltAPI : public UObject
+class GAMEJOLTPLUGIN_API UUEGameJoltAPI : public UObject
 {
 	GENERATED_UCLASS_BODY()
 
@@ -208,19 +208,10 @@ public:
 	/* Gets Username */
 	UFUNCTION(BlueprintPure, meta = (DisplayName = "Get Username"), Category = "GameJolt")
 	FString GetUsername();
-	
-	/* DEPRECATED - Sets Username */
-	UFUNCTION(Blueprintcallable, meta = (DeprecatedFunction, DeprecationMessage= "'Set Username' is deprecated. Please use 'Login' instead.", DisplayName = "Set Username"), Category = "GameJolt")
-	bool SetUserName(FString f_Username);
 
 	/* Gets Token */
 	UFUNCTION(BlueprintPure, meta = (DisplayName = "Get User Token"), Category = "GameJolt")
 	FString GetUserToken();
-
-	/* DEPRECATED - Sets Token */
-	UFUNCTION(Blueprintcallable, meta = (DeprecatedFunction, DeprecationMessage = "'Set User Token' is deprecated. Please use 'Login' instead.",DisplayName = "Set User Token"), Category = "GameJolt")
-	bool SetUserToken(FString f_UserToken);
-
 
 	/* Initializes GameJolt API */
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Init"), Category = "GameJolt|Init")
@@ -252,10 +243,7 @@ public:
 
 	// User Stuff
 
-	/* DEPRECATED - Logins the User */
-	UFUNCTION(BlueprintCallable, meta = (DeprecatedFunction, DeprecationMessage = "'Login User' is deprecated. Use 'Login' instead.", DisplayName = "Login User"), Category = "GameJolt")
-	bool AuthUser();
-
+	/* Is User logged in? */
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Is User Login"), Category = "GameJolt")
 	bool isUserAuthorize();
 

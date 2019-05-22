@@ -2,7 +2,7 @@
 
 #pragma once
 
-class GameJoltPlugin : public IModuleInterface
+class GAMEJOLTPLUGIN_API GameJoltPlugin : public IModuleInterface
 {
 private:
 

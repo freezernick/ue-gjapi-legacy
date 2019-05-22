@@ -1,9 +1,9 @@
 {
 	"FileVersion": 3,
-	"Version": 9,
-	"VersionName": "1.3",
-	"FriendlyName": "Game Jolt Plugin",
-	"Description": " This Plugin let you comunicate with the Game Jolt servers implemening online Scoreborad, Trophies, Cloud Data Storage, Game session logging and user verification and auto-login.",
+	"Version": 10,
+	"VersionName": "1.4",
+	"FriendlyName": "GameJolt Plugin",
+	"Description": " This plugin allows you to communicate with the GameJolt-Servers to use Scoreboards, Sessions, Cloud-Data-Storage and more.",
 	"Category": "GameJolt",
 	"CreatedBy": "FreezerNick",
 	"CreatedByURL": "https://gamejolt.com/@FreezerNick",

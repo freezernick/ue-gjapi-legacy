@@ -77,18 +77,6 @@ FString UUEGameJoltAPI::GetUsername()
 {
 	return UserName;
 }
-/**
-*	Set Username
-*
-*	@param f_Username	Username
-*
-*	@return true
-*/
-bool UUEGameJoltAPI::SetUserName(FString f_Username)
-{
-	UserName = f_Username;
-	return true;
-}
 
 /**
 *	Get User's Gamejolt Token
@@ -98,19 +86,6 @@ bool UUEGameJoltAPI::SetUserName(FString f_Username)
 FString UUEGameJoltAPI::GetUserToken()
 {
 	return UserToken;
-}
-
-/**
-*	Set User's Gamejolt Token
-*
-*	@param f_Username	UserToken
-*
-*	@return true
-*/
-bool UUEGameJoltAPI::SetUserToken(FString f_UserToken)
-{
-	UserToken = f_UserToken;
-	return true;
 }
 
 /**
@@ -128,52 +103,6 @@ UUEGameJoltAPI* UUEGameJoltAPI::Create(UObject* WorldContextObject) {
 	UUEGameJoltAPI* fieldData = NewObject<UUEGameJoltAPI>((UUEGameJoltAPI*)GetTransientPackage(), UUEGameJoltAPI::StaticClass());
 	fieldData->contextObject = WorldContextObject;
 	return fieldData;
-}
-
-/**
-* Logs in the User using the given Username and Usertoken
-*
-* 
-*
-* @return	bool  True if it Successed, False if it failed
-*/
-
-bool UUEGameJoltAPI::AuthUser()
-{
-	bool ret = true;
-	FString output;
-	FString GameIDString;
-
-	if (Game_ID <= 0)
-	{
-		UE_LOG(GJAPI, Warning, TEXT("The Game ID must be set."));
-		return false;
-
-	}
-	if (UserName == TEXT(""))
-	{
-		UE_LOG(GJAPI, Warning, TEXT("The username must be set."));
-		return false;
-	}
-	if (UserToken == TEXT(""))
-	{
-		UE_LOG(GJAPI, Warning, TEXT("The user token must be set."));
-		return false;
-	}
-	GameIDString = FString::FromInt(Game_ID);
-	GameJoltComponentEnum = EGameJoltComponentEnum::GJ_USER_AUTH;
-	ret = SendRequest(output, TEXT("/users/auth/?format=json&game_id=") + GameIDString + TEXT("&username=") + UserName + TEXT("&user_token=") + UserToken);
-
-	if (!ret)
-	{
-		UE_LOG(GJAPI, Warning, TEXT("Could not authenticate the user."));
-		return false;
-	}
-	
-	m_LoggedIn = true;
-	bGuest = false;
-	//
-	return true;
 }
 
 void UUEGameJoltAPI::Login(FString name, FString token)
@@ -207,7 +136,7 @@ bool UUEGameJoltAPI::isUserAuthorize()
 		m_LoggedIn = true;
 		bGuest = false;
 		return true;
-	} 
+	}
 	else
 	{
 		m_LoggedIn = false;
