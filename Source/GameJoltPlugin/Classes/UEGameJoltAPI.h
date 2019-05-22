@@ -117,7 +117,7 @@ struct FScoreTableInfo
 
 
 UCLASS(BlueprintType, Blueprintable)
-class UUEGameJoltAPI : public UObject
+class GAMEJOLTPLUGIN_API UUEGameJoltAPI : public UObject
 {
 	GENERATED_UCLASS_BODY()
 
