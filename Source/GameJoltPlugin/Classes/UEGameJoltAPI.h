@@ -1,6 +1,7 @@
 // Copyright (c) 2019 Free2Play-Entertainment
 
 #pragma once
+#include "IHttpRequest.h"
 #include "UEGameJoltAPI.generated.h"
 
 // Generate a delegate for the OnGetResult event
@@ -12,8 +13,8 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnFailed);
 UENUM(BlueprintType)		//"BlueprintType" is essential to include
 enum class EGameJoltComponentEnum : uint8
 {
-	GJ_USER_AUTH 	UMETA(DisplayName = "Authorize User"),
-	GJ_USER_FETCH 	UMETA(DisplayName = "Fetch User"),
+	GJ_USER_AUTH		UMETA(DisplayName = "Authorize User"),
+	GJ_USER_FETCH		UMETA(DisplayName = "Fetch User"),
 	GJ_SESSION_OPEN	    UMETA(DisplayName = "Open Session"),
 	GJ_SESSION_PING 	UMETA(DisplayName = "Ping Session"),
 	GJ_SESSION_CLOSE 	UMETA(DisplayName = "Close Session"),
