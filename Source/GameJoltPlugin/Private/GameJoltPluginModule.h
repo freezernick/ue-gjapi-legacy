@@ -1,6 +1,10 @@
 // Copyright (c) 2019 Free2Play-Entertainment
 
 #pragma once
+#include "CoreMinimal.h"
+#include "Modules/ModuleManager.h"
+
+DECLARE_LOG_CATEGORY_EXTERN(GJAPI, Log, All);
 
 class GAMEJOLTPLUGIN_API GameJoltPlugin : public IModuleInterface
 {

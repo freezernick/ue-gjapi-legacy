@@ -1,7 +1,11 @@
 // Copyright (c) 2019 Free2Play-Entertainment
 
 #pragma once
-#include "IHttpRequest.h"
+#include "CoreMinimal.h"
+#include "Interfaces/IHttpRequest.h"
+#include "Serialization/JsonSerializer.h"
+#include "Serialization/JsonWriter.h"
+#include "Dom/JsonValue.h"
 #include "UEGameJoltAPI.generated.h"
 
 // Generate a delegate for the OnGetResult event

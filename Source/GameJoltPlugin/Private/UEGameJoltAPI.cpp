@@ -1,6 +1,12 @@
 // Copyright (c) 2019 Free2Play-Entertainment
 
-#include "GameJoltPluginPCH.h"
+#include "UEGameJoltAPI.h"
+#include "Engine/Engine.h"
+#include "HttpModule.h"
+#include "Interfaces/IHttpResponse.h"
+#include "Dom/JsonObject.h"
+#include "Serialization/JsonReader.h"
+#include "GameJoltPluginModule.h"
 
 /* Constructor */
 UUEGameJoltAPI::UUEGameJoltAPI(const class FObjectInitializer& PCIP)
