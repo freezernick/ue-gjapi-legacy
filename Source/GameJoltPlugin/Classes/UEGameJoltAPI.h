@@ -27,7 +27,8 @@ enum class EGameJoltComponentEnum : uint8
 	GJ_DATASTORE_SET	UMETA(DisplayName = "Set Data Store"),
 	GJ_DATASTORE_UPDATE	UMETA(DisplayName = "Update Data Store"),
 	GJ_DATASTORE_REMOVE UMETA(DisplayName = "Get Keys"),
-	GJ_OTHER			UMETA(DisplayName = "Other")
+	GJ_OTHER			UMETA(DisplayName = "Other"),
+	GJ_TIME				UMETA(DisplayName = "Fetch Server Time")
 };
 
 UENUM(BlueprintType)		//"BlueprintType" is essential to include
@@ -234,12 +235,12 @@ public:
 	bool CloseSession();
 
 	/* Gets the time of the GameJolt Servers */
-	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Get Server Time"), Category = "GameJolt|Misc")
-	int32 GetServerTime();
+	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Fetch Server Time"), Category = "GameJolt|Misc")
+	bool FetchServerTime();
 
-	/* FOR TESTING - Sends a request to the 1.2 API */
-	UFUNCTION(Blueprintcallable, meta = (Displayname = " Send Request 1.2"), Category = "GameJolt")
-	bool SendRequest12(const FString& output, FString url);
+	/* Outputs the server time that was fetched with FetchServerTime */
+	UFUNCTION(BlueprintPure, meta = (DisplayName = "Read Server Time"), Category = "GameJolt|Misc")
+	struct FDateTime ReadServerTime();
 
 	// User Stuff
 
