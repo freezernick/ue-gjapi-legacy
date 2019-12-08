@@ -1,6 +1,7 @@
 // Copyright (c) 2019 Free2Play-Entertainment
 
 #include "GameJoltPluginPCH.h"
+#include "Misc/DateTime.h"
 
 /* Constructor */
 UUEGameJoltAPI::UUEGameJoltAPI(const class FObjectInitializer& PCIP)
@@ -39,20 +40,46 @@ void UUEGameJoltAPI::Init(FString PrivateKey, int32 GameID)
 	Game_PrivateKey = PrivateKey;
 }
 
-/*
-	FOR TESTING
-	Gets time of the GameJolt servers
+/**
+ * Fetches the time of the GameJolt servers
+ * @return Whether the request was ok or not
 */
-int32 UUEGameJoltAPI::GetServerTime()
+bool UUEGameJoltAPI::FetchServerTime()
 {
-	bool ret;
 	FString GameIDString;
 	FString output;
 	GameIDString = FString::FromInt(Game_ID);
-	ret = SendRequest12(output, TEXT("time/?format=json&game_id=") + GameIDString);
-	return true;
+	GameJoltComponentEnum = EGameJoltComponentEnum::GJ_TIME;
+	return SendRequest(output, TEXT("/time/?format=json&game_id=") + GameIDString);
 }
 
+/**
+ * Creates a FDateTime struct from the FetchServerTime response
+ * @return The FDateTime struct
+ */
+FDateTime UUEGameJoltAPI::ReadServerTime()
+{
+	UUEGameJoltAPI* responseField = NULL;
+	responseField = GetObject("response");
+	if (responseField == NULL)
+	{
+		UE_LOG(LogJson, Error, TEXT("responseField Return Null"));
+		return FDateTime();
+	}
+	if(!responseField->GetBool("success"))
+	{
+		UE_LOG(GJAPI, Error, TEXT("Can't read time: Request failed!"));
+		return FDateTime();
+	}
+	int32 Year = responseField->GetInt("year");
+	int32 Month = responseField->GetInt("month");
+	int32 Day = responseField->GetInt("day");
+	int32 Hour = responseField->GetInt("hour");
+	int32 Minute = responseField->GetInt("minute");
+	int32 Second = responseField->GetInt("second");
+
+	return FDateTime(Year, Month, Day, Hour, Minute, Second);
+}
 
 /**
 *	Get the Game Private Key
@@ -633,42 +660,6 @@ TArray<UUEGameJoltAPI*> UUEGameJoltAPI::GetObjectArray(UObject* WorldContextObje
 	// Return the array, will be empty if unsuccessful
 
 	return objectArray;
-}
-
-bool UUEGameJoltAPI::SendRequest12(const FString& output, FString url)
-{
-
-	if (Game_PrivateKey == TEXT(""))
-	{
-		UE_LOG(GJAPI, Error, TEXT("(You must put in your game's private key before you can use any of the API functions.)"));
-		return false;
-	}
-
-	FString outStr;
-	TSharedRef<TJsonWriter<TCHAR>> JsonWriter = TJsonWriterFactory<TCHAR>::Create(&outStr);
-	//Start writing the response
-	WriteObject(JsonWriter, "", new FJsonValueObject(Data));
-	JsonWriter->Close();
-	//Create URL First
-
-	url = TEXT("https://") + GJAPI_SERVER + GJAPI_ROOT + TEXT("v1.2") + url;
-	//UE_LOG(GJAPI, Error, TEXT("%s"), *url);
-	FString signature(FMD5::HashAnsiString(*(url + Game_PrivateKey))); //+ GJAPI_SERVER + url + Game_PrivateKey(TEXT("http://") + GJAPI_SERVER +
-	url += TEXT("&signature=") + signature;
-	UE_LOG(GJAPI, Error, TEXT("%s"), *url);
-
-
-	TSharedRef< IHttpRequest > HttpRequest = FHttpModule::Get().CreateRequest();
-	HttpRequest->SetVerb("POST");
-	HttpRequest->SetURL(CreateURL(url));
-	HttpRequest->SetHeader("Content-Type", "application/json");
-	HttpRequest->SetContentAsString(output);
-
-	HttpRequest->OnProcessRequestComplete().BindUObject(this, &UUEGameJoltAPI::OnReady);
-	HttpRequest->ProcessRequest();
-
-	return true;
-
 }
 
 bool UUEGameJoltAPI::SendRequest(const FString& output, FString url)
