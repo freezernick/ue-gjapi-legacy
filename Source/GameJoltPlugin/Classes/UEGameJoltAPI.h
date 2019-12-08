@@ -28,7 +28,7 @@ enum class EGameJoltComponentEnum : uint8
 	GJ_DATASTORE_UPDATE	UMETA(DisplayName = "Update Data Store"),
 	GJ_DATASTORE_REMOVE UMETA(DisplayName = "Get Keys"),
 	GJ_OTHER			UMETA(DisplayName = "Other"),
-	GJ_Time				UMETA(DisplayName = "Fetch Server Time")
+	GJ_TIME				UMETA(DisplayName = "Fetch Server Time")
 };
 
 UENUM(BlueprintType)		//"BlueprintType" is essential to include
