@@ -17,12 +17,7 @@
 		{
 			"Name": "GameJoltPlugin",
 			"Type": "Runtime",
-			"LoadingPhase": "Default",
-			"WhitelistPlatforms" :
-			[
-				"Win64",
-				"Win32"
-			]
+			"LoadingPhase": "Default"
 		}
 	]
 }
