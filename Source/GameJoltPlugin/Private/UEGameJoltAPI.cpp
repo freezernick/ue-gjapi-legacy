@@ -8,6 +8,7 @@
 #include "Serialization/JsonReader.h"
 #include "GameJoltPluginModule.h"
 #include "Misc/DateTime.h"
+#include "Engine/World.h"
 
 /* Constructor */
 UUEGameJoltAPI::UUEGameJoltAPI(const class FObjectInitializer& PCIP)
@@ -25,6 +26,11 @@ UUEGameJoltAPI::UUEGameJoltAPI(const class FObjectInitializer& PCIP)
 	GameJoltComponentEnum = EGameJoltComponentEnum::GJ_USER_AUTH;
 	
 	
+}
+
+UWorld* UUEGameJoltAPI::GetWorld() const
+{
+	return World;
 }
 
 /*
@@ -131,10 +137,10 @@ FString UUEGameJoltAPI::GetUserToken()
 UUEGameJoltAPI* UUEGameJoltAPI::Create(UObject* WorldContextObject) {
 	// Get the world object from the context
 	UWorld* World = GEngine->GetWorldFromContextObjectChecked(WorldContextObject);
-
 	// Construct the object and return it
 	UUEGameJoltAPI* fieldData = NewObject<UUEGameJoltAPI>((UUEGameJoltAPI*)GetTransientPackage(), UUEGameJoltAPI::StaticClass());
 	fieldData->contextObject = WorldContextObject;
+	fieldData->World = World;
 	return fieldData;
 }
 

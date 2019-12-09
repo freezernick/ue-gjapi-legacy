@@ -141,6 +141,11 @@ public:
 
 	UObject* contextObject;
 
+	UPROPERTY(Transient)
+	class UWorld* World;
+
+	virtual class UWorld* GetWorld() const override;
+
 	UPROPERTY(BlueprintReadOnly, Category = "GameJolt")
 	bool bGuest;
 	UPROPERTY(BlueprintReadWrite, Category = "GameJolt")
