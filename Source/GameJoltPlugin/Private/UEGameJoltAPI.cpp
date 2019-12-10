@@ -118,16 +118,6 @@ FString UUEGameJoltAPI::GetUsername()
 }
 
 /**
-*	Get User's Gamejolt Token
-*
-*	@return UserToken
-*/
-FString UUEGameJoltAPI::GetUserToken()
-{
-	return UserToken;
-}
-
-/**
 * Create a new instance of the UUEGameJoltAPI class, for use in Blueprint graphs.
 *
 * @param	WorldContextObject		The current context

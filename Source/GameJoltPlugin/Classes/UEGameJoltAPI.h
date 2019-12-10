@@ -219,10 +219,6 @@ public:
 	UFUNCTION(BlueprintPure, meta = (DisplayName = "Get Username"), Category = "GameJolt")
 	FString GetUsername();
 
-	/* Gets Token */
-	UFUNCTION(BlueprintPure, meta = (DisplayName = "Get User Token"), Category = "GameJolt")
-	FString GetUserToken();
-
 	/* Initializes GameJolt API */
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Init"), Category = "GameJolt|Init")
 	void Init(FString PrivateKey, int32 GameID);
