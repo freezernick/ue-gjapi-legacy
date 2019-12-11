@@ -146,12 +146,13 @@ public:
 
 	virtual class UWorld* GetWorld() const override;
 
-	UPROPERTY(BlueprintReadOnly, Category = "GameJolt")
+	UPROPERTY(BlueprintReadOnly, Category = "GameJolt|User")
 	bool bGuest;
-	UPROPERTY(BlueprintReadWrite, Category = "GameJolt")
+
+	UPROPERTY(BlueprintReadWrite, Category = "GameJolt|User")
 	FString Guest_username;
 
-	UPROPERTY(BlueprintReadOnly, Category = "GameJolt")
+	UPROPERTY(BlueprintReadOnly, Category = "GameJolt|User")
 	bool m_LoggedIn;
 
 	UPROPERTY(BlueprintReadWrite, Category = "GameJolt")
@@ -161,7 +162,7 @@ public:
 	TSharedPtr<FJsonObject> Data;
 
 	/* Contains the actual page content, as a string */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "GameJolt")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "GameJolt|Request")
 	FString Content;
 
 	/* Event which triggers when the content has been retrieved */
@@ -173,7 +174,7 @@ public:
 	FOnFailed OnFailed;
 
 	/* Creates new data from the input string */
-	UFUNCTION(BlueprintCallable, meta = (DisplayName = "From String"), Category = "GameJolt")
+	UFUNCTION(BlueprintCallable, meta = (DisplayName = "From String"), Category = "GameJolt|Request")
 	void FromString(const FString& dataString);
 
 	/* Creates a new post data object */
@@ -189,19 +190,21 @@ public:
 	FString Game_PrivateKey;
 
 	/* Username */
-	UPROPERTY(BlueprintReadOnly, meta = (DisplayName = "Players Username"), Category = "GameJolt")
+	UPROPERTY(BlueprintReadOnly, meta = (DisplayName = "Players Username"), Category = "GameJolt|User")
 	FString UserName;
 
 	/* Token */
-	UPROPERTY(BlueprintReadOnly, meta = (DisplayName = "Players UserToken"), Category = "GameJolt")
+	UPROPERTY(BlueprintReadOnly, meta = (DisplayName = "Players UserToken"), Category = "GameJolt|User")
 	FString UserToken;
 
 	/* Properties for HTTP-Request*/
-	UPROPERTY(BlueprintReadWrite, meta = (DisplayName = "GameJolt API Server"), Category = "GameJolt")
+	UPROPERTY(BlueprintReadWrite, meta = (DisplayName = "GameJolt API Server"), Category = "GameJolt|Request")
 	FString GJAPI_SERVER;
-	UPROPERTY(BlueprintReadWrite, meta = (DisplayName = "GameJolt API Root"), Category = "GameJolt")
+
+	UPROPERTY(BlueprintReadWrite, meta = (DisplayName = "GameJolt API Root"), Category = "GameJolt|Request")
 	FString GJAPI_ROOT;
-	UPROPERTY(BlueprintReadWrite, meta = (DisplayName = "GameJolt API Version"), Category = "GameJolt")
+
+	UPROPERTY(BlueprintReadWrite, meta = (DisplayName = "GameJolt API Version"), Category = "GameJolt|Request")
 	FString GJAPI_VERSION;
 	/* End of Properties */
 
@@ -216,11 +219,11 @@ public:
 	FString GetGamePrivateKey();
 	
 	/* Gets Username */
-	UFUNCTION(BlueprintPure, meta = (DisplayName = "Get Username"), Category = "GameJolt")
+	UFUNCTION(BlueprintPure, meta = (DisplayName = "Get Username"), Category = "GameJolt|User")
 	FString GetUsername();
 
 	/* Initializes GameJolt API */
-	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Init"), Category = "GameJolt|Init")
+	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Init"), Category = "GameJolt")
 	void Init(FString PrivateKey, int32 GameID);
 
 	/* Logs User in */
@@ -250,90 +253,90 @@ public:
 	// User Stuff
 
 	/* Is User logged in? */
-	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Is User Login"), Category = "GameJolt")
+	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Is User Login"), Category = "GameJolt|User")
 	bool isUserAuthorize();
 
 	/* Logs User off */
-	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Logoff User"), Category = "GameJolt")
+	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Logoff User"), Category = "GameJolt|User")
 	void LogOffUser();
 
-	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Login Status"), Category = "GameJolt")
+	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Login Status"), Category = "GameJolt|User")
 	void LogInStatus();
 
 	/* Fetch User */
-	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Fetch Users"), Category = "GameJolt")
+	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Fetch Users"), Category = "GameJolt|User")
 	bool FetchUser();
 
 	/* Gets Array of Users */
-	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Get Array of Users"), Category = "GameJolt")
+	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Get Array of Users"), Category = "GameJolt|User")
 	TArray<FUserInfo> FetchArrayUsers();
 
 	/* Trophy Stuff */
 
 	/* Rewards Trophy */
-	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Reward Trophies"), Category = "GameJolt")
+	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Reward Trophies"), Category = "GameJolt|Trophies")
 	bool RewardTrophy(int32 Trophy_ID);
 
 	/* Fetch Trophies */
-	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Fetch Trophies"), Category = "GameJolt")
+	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Fetch Trophies"), Category = "GameJolt|Trophies")
 	void FetchTrophies(EGameJoltAchievedTrophies AchievedType, TArray<int32> Trophies_ID);
 
 	/* Get Trophies */
-	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Get Trophies"), Category = "GameJolt")
+	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Get Trophies"), Category = "GameJolt|Trophies")
 	TArray<FTrophyInfo> GetTrophies();
 
 
 	/* Score Stuff */
 
 	/* Fetch Scoreboard*/
-	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Fetch Scoreboard"), Category = "GameJolt")
+	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Fetch Scoreboard"), Category = "GameJolt|Scoreboard")
 	bool FetchScoreboard(int32 ScoreLimit, int32 Table_id);
 
 	/* Gets Scoreboard */
-	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Get Scoreboard"), Category = "GameJolt")
+	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Get Scoreboard"), Category = "GameJolt|Scoreboard")
 	TArray<FScoreInfo> GetScoreboard();
 
 	/* Adds Score to Scoreboard */
-	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Add Score to Scoreboard"), Category = "GameJolt")
+	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Add Score to Scoreboard"), Category = "GameJolt|Scoreboard")
 	bool AddScore(FString UserScore, int32 UserScore_Sort, FString GuestUser, FString extra_data, int32 table_id);
 
 	/* Fetch Scoreboard Table*/
-	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Fetch Scoreboard Table"), Category = "GameJolt")
+	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Fetch Scoreboard Table"), Category = "GameJolt|Scoreboard")
 	bool FetchScoreboardTable();
 
 	/* Gets Scoreboard Table */
-	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Get Scoreboard Table"), Category = "GameJolt")
+	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Get Scoreboard Table"), Category = "GameJolt|Scoreboard")
 	TArray<FScoreTableInfo>  GetScoreboardTable();
 
 
 	/* Utility Functions */
 
 	/* Sends Request */
-	UFUNCTION(Blueprintcallable, meta = (Displayname = " Send Request"), Category = "GameJolt")
+	UFUNCTION(Blueprintcallable, meta = (Displayname = " Send Request"), Category = "GameJolt|Request|Advanced")
 	bool SendRequest(const FString& output, FString url);
 
 	/* Fetches nested post data from the post data */
-	UFUNCTION(BlueprintPure, meta = (DisplayName = "Get Data Field", HidePin = "WorldContextObject", DefaultToSelf = "WorldContextObject"), Category = "GameJolt")
+	UFUNCTION(BlueprintPure, meta = (DisplayName = "Get Data Field", HidePin = "WorldContextObject", DefaultToSelf = "WorldContextObject"), Category = "GameJolt|Request|Advanced")
 	UUEGameJoltAPI* GetObject(const FString& key);
 
 	/* Gets string data from the post data */
-	UFUNCTION(BlueprintPure, meta = (DisplayName = "Get String Field"), Category = "GameJolt")
+	UFUNCTION(BlueprintPure, meta = (DisplayName = "Get String Field"), Category = "GameJol|Request|Advanced")
 	FString GetString(const FString& key) const;
 
 	/* Gets bool data from the post data */
-	UFUNCTION(BlueprintPure, meta = (DisplayName = "Get Bool Field"), Category = "GameJolt")
+	UFUNCTION(BlueprintPure, meta = (DisplayName = "Get Bool Field"), Category = "GameJolt|Request|Advanced")
 	bool GetBool(const FString& key) const;
 
 	/* Gets int data from the post data */
-	UFUNCTION(BlueprintPure, meta = (DisplayName = "Get Int Field"), Category = "GameJolt")
+	UFUNCTION(BlueprintPure, meta = (DisplayName = "Get Int Field"), Category = "GameJolt|Request|Advanced")
 	int32 GetInt(const FString& key) const;
 
 	/* Get all keys from the object */
-	UFUNCTION(Blueprintpure, meta = (Displayname = "Get Object Keys", HidePin = "WorldContextObject", DefaultToSelf = "WorldContextObject"), Category = "GameJolt")
+	UFUNCTION(Blueprintpure, meta = (Displayname = "Get Object Keys", HidePin = "WorldContextObject", DefaultToSelf = "WorldContextObject"), Category = "GameJolt|Request|Advanced")
 	TArray<FString> GetObjectKeys(UObject* WorldContextObject);
 
 	/* Gets an array with post data with the specified key */
-	UFUNCTION(BlueprintPure, meta = (DisplayName = "Get Object Array Field", HidePin = "WorldContextObject", DefaultToSelf = "WorldContextObject"), Category = "GameJolt")
+	UFUNCTION(BlueprintPure, meta = (DisplayName = "Get Object Array Field", HidePin = "WorldContextObject", DefaultToSelf = "WorldContextObject"), Category = "GameJolt|Request|Advanced")
 	TArray<UUEGameJoltAPI*> GetObjectArray(UObject* WorldContextObject, const FString& key);
 /*
 	UFUNCTION(Blueprintcallable, meta = (DisplayName = "Encode URL"), Category = "GameJolt")
