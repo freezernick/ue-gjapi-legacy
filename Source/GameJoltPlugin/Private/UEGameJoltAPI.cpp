@@ -75,12 +75,16 @@ FDateTime UUEGameJoltAPI::ReadServerTime()
 	responseField = GetObject("response");
 	if (responseField == NULL)
 	{
-		UE_LOG(LogJson, Error, TEXT("responseField Return Null"));
+		UE_LOG(GJAPI, Error, TEXT("responseField Return Null"));
 		return FDateTime();
 	}
 	if(!responseField->GetBool("success"))
 	{
 		UE_LOG(GJAPI, Error, TEXT("Can't read time: Request failed!"));
+		if(responseField->GetString("message") != "")
+		{
+			UE_LOG(GJAPI, Error, TEXT("Error message: %s"), *responseField->GetString("message"));
+		}
 		return FDateTime();
 	}
 	int32 Year = responseField->GetInt("year");
@@ -156,23 +160,23 @@ bool UUEGameJoltAPI::isUserAuthorize()
 	responseField = GetObject("response");
 	if (responseField == NULL)
 	{
-		UE_LOG(LogJson, Error, TEXT("responseField Return Null"));
+		UE_LOG(GJAPI, Error, TEXT("responseField Return Null"));
 		return false;
 	}
 	outAuthorize = responseField->GetBool("success");
-	if (outAuthorize)
-	{
-		m_LoggedIn = true;
-		bGuest = false;
-		return true;
-	}
-	else
+	if (!outAuthorize)
 	{
 		m_LoggedIn = false;
 		bGuest = true;
+		UE_LOG(GJAPI, Error, TEXT("Couldn't authenticate user. Message: %s"), *responseField->GetString("message"));
 		return false;
 	}
+
+	m_LoggedIn = true;
+	bGuest = false;
+	return true;
 }
+
 /**
 * Returns the Users info from Gamejolt
 *
@@ -188,7 +192,7 @@ bool UUEGameJoltAPI::FetchUser()
 	ret = SendRequest(output, TEXT("/users/?format=json&game_id=") + GameIDString + TEXT("&username=") + UserName);
 	if (!ret)
 	{
-		UE_LOG(GJAPI, Warning, TEXT("Could not Fetch user."));
+		UE_LOG(GJAPI, Error, TEXT("Could not fetch user."));
 		return false;
 	}
 	return true;
@@ -278,7 +282,6 @@ TArray<FUserInfo>  UUEGameJoltAPI::FetchArrayUsers()
 		tempUser.Last_Logged_in = returnArray[i]->GetString("last_logged_in");
 		tempUser.status = returnArray[i]->GetString("status");
 		returnUserInfo.Add(tempUser);
-		//UE_LOG(GJAPI, Error, TEXT("'%d'"), returnArray.Num());
 	}
 	
 	return returnUserInfo;
@@ -301,7 +304,7 @@ bool UUEGameJoltAPI::RewardTrophy(int32 Trophy_ID)
 	GameIDString = FString::FromInt(Game_ID);
 	if (bGuest)
 	{
-		UE_LOG(GJAPI, Warning, TEXT("(User is not logged on)"));
+		UE_LOG(GJAPI, Error, TEXT("User is not logged in"));
 		return false;
 	}
 	TrophyIDString = FString::FromInt(Trophy_ID);
@@ -332,7 +335,7 @@ void UUEGameJoltAPI::FetchTrophies(EGameJoltAchievedTrophies AchievedType, TArra
 
 	if (!m_LoggedIn)
 	{
-		UE_LOG(GJAPI, Warning, TEXT("User has not logged in!"));
+		UE_LOG(GJAPI, Error, TEXT("User is not logged in!"));
 		return;
 	}
 	
@@ -348,9 +351,7 @@ void UUEGameJoltAPI::FetchTrophies(EGameJoltAchievedTrophies AchievedType, TArra
 
 	GameIDString = FString::FromInt(Game_ID);
 	for (int32 i = 0; i < Trophies_ID.Num(); i++){
-		UE_LOG(GJAPI, Log, TEXT("HelloAll"));
 		TrophyIDString += FString::FromInt(Trophies_ID[i]);
-		//UE_LOG(GJAPI, Error, TEXT("%s"), TrophyIDString);
 		if (i != Trophies_ID.Num()-1)
 		{
 			TrophyIDString += TEXT(",");
@@ -374,7 +375,7 @@ void UUEGameJoltAPI::FetchTrophies(EGameJoltAchievedTrophies AchievedType, TArra
 
 	if (!ret)
 	{
-		UE_LOG(GJAPI, Warning, TEXT("Could not Fetch Trophies."));
+		UE_LOG(GJAPI, Error, TEXT("Could not fetch trophies."));
 		return;
 	}
 
@@ -391,7 +392,6 @@ TArray<FTrophyInfo> UUEGameJoltAPI::GetTrophies()
 	TArray<FTrophyInfo> returnTrophy;
 	TArray<UUEGameJoltAPI*> returnArray = GetObject("response")->GetObjectArray(GetObject("response"), "trophies");
 	FTrophyInfo tempTrophies;
-	UE_LOG(GJAPI, Error, TEXT("'%d'"), returnArray.Num());
 	for (int i = 0; i< returnArray.Num(); i++)
 	{
 		
@@ -403,7 +403,6 @@ TArray<FTrophyInfo> UUEGameJoltAPI::GetTrophies()
 		tempTrophies.achieved = returnArray[i]->GetString("achieved");
 
 		returnTrophy.Add(tempTrophies);
-		//UE_LOG(GJAPI, Error, TEXT("'%d'"), returnArray.Num());
 	}
 
 		return returnTrophy;
@@ -437,7 +436,7 @@ bool UUEGameJoltAPI::FetchScoreboard(int32 ScoreLimit, int32 Table_id)
 
 	if (!ret)
 	{
-		UE_LOG(GJAPI, Warning, TEXT("Could not Fetch Scoreboard."));
+		UE_LOG(GJAPI, Error, TEXT("Could not fetch scoreboard."));
 		return false;
 	}
 
@@ -454,7 +453,6 @@ TArray<FScoreInfo> UUEGameJoltAPI::GetScoreboard()
 	TArray<FScoreInfo> returnScoreInfo;
 	TArray<UUEGameJoltAPI*> returnArray = GetObject("response")->GetObjectArray(GetObject("response"), "scores");
 	FScoreInfo tempScore;
-	UE_LOG(GJAPI, Error, TEXT("'%d'"), returnArray.Num());
 	for (int i = 0; i < returnArray.Num(); i++)
 	{
 		tempScore.ScoreSort = returnArray[i]->GetInt("sort");
@@ -464,12 +462,9 @@ TArray<FScoreInfo> UUEGameJoltAPI::GetScoreboard()
 		tempScore.User_Id = returnArray[i]->GetInt("user_id");
 		tempScore.guestUser = returnArray[i]->GetString("guest");
 		tempScore.stored = returnArray[i]->GetString("stored");
-		//UE_LOG(GJAPI, Error, TEXT("'%d'"), returnArray.Num());
 
 		returnScoreInfo.Add(tempScore);
 	}
-	//UE_LOG(GJAPI, Error, TEXT("NOPE!"));
-
 	return returnScoreInfo;
 }
 
@@ -506,7 +501,7 @@ bool UUEGameJoltAPI::AddScore(FString UserScore, int32 UserScore_Sort, FString G
 		(table_id > 0 ? "&table_id=" : "") + (table_id > 0 ? TableIDString : ""));
 	if (!ret)
 	{
-		UE_LOG(GJAPI, Warning, TEXT("Failed to Add User's Score"));
+		UE_LOG(GJAPI, Error, TEXT("Failed to add user's score"));
 		return false;
 	}
 
@@ -531,7 +526,7 @@ bool UUEGameJoltAPI::FetchScoreboardTable()
 
 	if (!ret)
 	{
-		UE_LOG(GJAPI, Warning, TEXT("Could not Fetch Scoreboard Table."));
+		UE_LOG(GJAPI, Error, TEXT("Could not fetch scoreboard table"));
 		return false;
 	}
 
@@ -577,7 +572,7 @@ UUEGameJoltAPI* UUEGameJoltAPI::GetObject(const FString& key)
 	const TSharedPtr<FJsonObject> *outPtr;
 	if (!Data->TryGetObjectField(*key, outPtr)) {
 		// Throw an error and return NULL when the key could not be found
-		UE_LOG(LogJson, Error, TEXT("Entry '%s' not found in the field data!"), *key);
+		UE_LOG(GJAPI, Error, TEXT("Entry '%s' not found in the field data!"), *key);
 		return NULL;
 	}
 
@@ -669,7 +664,7 @@ bool UUEGameJoltAPI::SendRequest(const FString& output, FString url)
 
 	if (Game_PrivateKey == TEXT(""))
 	{
-		UE_LOG(GJAPI, Error, TEXT("(You must put in your game's private key before you can use any of the API functions.)"));
+		UE_LOG(GJAPI, Error, TEXT("You must put in your game's private key before you can use any of the API functions."));
 		return false;
 	}
 
@@ -681,7 +676,6 @@ bool UUEGameJoltAPI::SendRequest(const FString& output, FString url)
 	//Create URL First
 
 	url = TEXT("https://") + GJAPI_SERVER + GJAPI_ROOT + GJAPI_VERSION + url;
-	//UE_LOG(GJAPI, Error, TEXT("%s"), *url);
 	FString signature(FMD5::HashAnsiString(*(url + Game_PrivateKey))); //+ GJAPI_SERVER + url + Game_PrivateKey(TEXT("http://") + GJAPI_SERVER +
 	url += TEXT("&signature=") + signature;
 	UE_LOG(GJAPI, Error, TEXT("%s"), *url);
@@ -772,7 +766,7 @@ void UUEGameJoltAPI::FromString(const FString& dataString) {
 	bool isDeserialized = FJsonSerializer::Deserialize(JsonReader, Data);
 
 	if (!isDeserialized || !Data.IsValid()) {
-		UE_LOG(LogJson, Error, TEXT("JSON data is invalid! Input:\n'%s'"), *dataString);
+		UE_LOG(GJAPI, Error, TEXT("JSON data is invalid! Input:\n'%s'"), *dataString);
 	}
 
 	// Assign the request content
