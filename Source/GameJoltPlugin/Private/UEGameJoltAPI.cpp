@@ -219,13 +219,11 @@ void UUEGameJoltAPI::LogInStatus()
 
 bool UUEGameJoltAPI::OpenSession()
 {
-	bool ret;
 	FString output;
 	FString GameIDString;
 	GameIDString = FString::FromInt(Game_ID);
-	ret = SendRequest(output, TEXT("/sessions/open/?format=json&game_id=") + GameIDString + 
+	return SendRequest(output, TEXT("/sessions/open/?format=json&game_id=") + GameIDString + 
 		TEXT("&username=") + UserName + TEXT("&user_token=") + UserToken);
-	return true;
 }
 
 /*
@@ -233,13 +231,11 @@ bool UUEGameJoltAPI::OpenSession()
 */
 bool UUEGameJoltAPI::PingSession()
 {
-	bool ret;
 	FString output;
 	FString GameIDString;
 	GameIDString = FString::FromInt(Game_ID);
-	ret = SendRequest(output, TEXT("/sessions/ping/?format=json&status=active&game_id=") + GameIDString +
+	return SendRequest(output, TEXT("/sessions/ping/?format=json&status=active&game_id=") + GameIDString +
 		TEXT("&username=") + UserName + TEXT("&user_token=") + UserToken);
-	return true;
 }
 
 /*
@@ -247,14 +243,12 @@ bool UUEGameJoltAPI::PingSession()
 */
 bool UUEGameJoltAPI::CloseSession()
 {
-	bool ret;
 	FString output;
 	FString GameIDString;
 	GameIDString = FString::FromInt(Game_ID);
-	ret = SendRequest(output, TEXT("/sessions/close/?format=json&game_id=") + GameIDString +
+	return SendRequest(output, TEXT("/sessions/close/?format=json&game_id=") + GameIDString +
 		TEXT("&username=") + UserName +
 		TEXT("&user_token=") + UserToken);
-	return true;
 }
 
 /***
