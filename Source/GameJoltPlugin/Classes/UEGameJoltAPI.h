@@ -260,9 +260,6 @@ public:
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Logoff User"), Category = "GameJolt|User")
 	void LogOffUser();
 
-	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Login Status"), Category = "GameJolt|User")
-	void LogInStatus();
-
 	/* Fetch User */
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Fetch Users"), Category = "GameJolt|User")
 	bool FetchUser();

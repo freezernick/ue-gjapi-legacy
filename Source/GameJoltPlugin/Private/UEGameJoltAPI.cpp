@@ -207,16 +207,6 @@ void UUEGameJoltAPI::LogOffUser()
 	bGuest = true;
 }
 
-/** TODO: Add Fetch Function to LogInStatus()
-*/
-/*
-Check if user is active
-*/
-void UUEGameJoltAPI::LogInStatus()
-{
-
-}
-
 bool UUEGameJoltAPI::OpenSession()
 {
 	FString output;
