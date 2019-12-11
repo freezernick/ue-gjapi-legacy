@@ -4,27 +4,21 @@
  * 
  */
 
+using UnrealBuildTool;
+using System.IO;
+
 namespace UnrealBuildTool.Rules
 {
 	public class GameJoltPlugin : ModuleRules
 	{
         public GameJoltPlugin(ReadOnlyTargetRules Target) : base (Target)
 		{
+
 			PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
-			PublicIncludePaths.AddRange(
-				new string[] {
-					// ... add public include paths required here ...
-				}
-				);
+			PublicIncludePaths.Add(Path.Combine(ModuleDirectory, "Classes"));
 
-			PrivateIncludePaths.AddRange(
-				new string[] {
-					"GameJoltPlugin/Private",
-					"GameJoltPlugin/Classes"
-					// ... add other private include paths required here ...
-				}
-				);
+			PrivateIncludePaths.Add(Path.Combine(ModuleDirectory, "Private"));
 
 			PublicDependencyModuleNames.AddRange(
 				new string[]
@@ -34,7 +28,6 @@ namespace UnrealBuildTool.Rules
                     "CoreUObject",
                     "Engine",
                     "Json",
-					// ... add other public dependencies that you statically link with here ...
 				}
 				);
 
@@ -46,13 +39,6 @@ namespace UnrealBuildTool.Rules
                     "CoreUObject",
                     "HTTP",
                     "JSON",
-				}
-				);
-
-			DynamicallyLoadedModuleNames.AddRange(
-				new string[]
-				{
-					// ... add any modules that your module loads dynamically here ...
 				}
 				);
 		}
