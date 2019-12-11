@@ -193,9 +193,12 @@ public:
 	UPROPERTY(BlueprintReadOnly, meta = (DisplayName = "Players Username"), Category = "GameJolt|User")
 	FString UserName;
 
+private:
 	/* Token */
-	UPROPERTY(BlueprintReadOnly, meta = (DisplayName = "Players UserToken"), Category = "GameJolt|User")
+	UPROPERTY()
 	FString UserToken;
+
+public:
 
 	/* Properties for HTTP-Request*/
 	UPROPERTY(BlueprintReadWrite, meta = (DisplayName = "GameJolt API Server"), Category = "GameJolt|Request")
