@@ -320,7 +320,7 @@ public:
 	UUEGameJoltAPI* GetObject(const FString& key);
 
 	/* Gets string data from the post data */
-	UFUNCTION(BlueprintPure, meta = (DisplayName = "Get String Field"), Category = "GameJol|Request|Advanced")
+	UFUNCTION(BlueprintPure, meta = (DisplayName = "Get String Field"), Category = "GameJolt|Request|Advanced")
 	FString GetString(const FString& key) const;
 
 	/* Gets bool data from the post data */
