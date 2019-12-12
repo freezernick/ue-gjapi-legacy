@@ -212,6 +212,7 @@ bool UUEGameJoltAPI::OpenSession()
 	FString output;
 	FString GameIDString;
 	GameIDString = FString::FromInt(Game_ID);
+	GameJoltComponentEnum = EGameJoltComponentEnum::GJ_SESSION_OPEN;
 	return SendRequest(output, TEXT("/sessions/open/?format=json&game_id=") + GameIDString + 
 		TEXT("&username=") + UserName + TEXT("&user_token=") + UserToken);
 }
@@ -224,6 +225,7 @@ bool UUEGameJoltAPI::PingSession()
 	FString output;
 	FString GameIDString;
 	GameIDString = FString::FromInt(Game_ID);
+	GameJoltComponentEnum = EGameJoltComponentEnum::GJ_SESSION_PING;
 	return SendRequest(output, TEXT("/sessions/ping/?format=json&status=active&game_id=") + GameIDString +
 		TEXT("&username=") + UserName + TEXT("&user_token=") + UserToken);
 }
@@ -236,6 +238,7 @@ bool UUEGameJoltAPI::CloseSession()
 	FString output;
 	FString GameIDString;
 	GameIDString = FString::FromInt(Game_ID);
+	GameJoltComponentEnum = EGameJoltComponentEnum::GJ_SESSION_CLOSE;
 	return SendRequest(output, TEXT("/sessions/close/?format=json&game_id=") + GameIDString +
 		TEXT("&username=") + UserName +
 		TEXT("&user_token=") + UserToken);
