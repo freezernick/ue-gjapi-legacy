@@ -14,6 +14,9 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnGetResult);
 // Generate a delegate for the OnFailed event
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnFailed);
 
+/**
+ * An enum representing the last request performed. Local 'Get' nodes don't count
+ */
 UENUM(BlueprintType)		//"BlueprintType" is essential to include
 enum class EGameJoltComponentEnum : uint8
 {
@@ -155,8 +158,9 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category = "GameJolt|User")
 	bool m_LoggedIn;
 
+	/* An enum representing the last request send. Local 'Get' nodes don't count */
 	UPROPERTY(BlueprintReadWrite, Category = "GameJolt")
-	EGameJoltComponentEnum GameJoltComponentEnum;
+	EGameJoltComponentEnum LastActionPerformed;
 
 	/* The actual field data */
 	TSharedPtr<FJsonObject> Data;
