@@ -158,6 +158,10 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category = "GameJolt|User")
 	bool m_LoggedIn;
 
+	/* Will be removed in 1.7 */
+	UPROPERTY(meta = (DeprecatedProperty, DeprecationMessage="Use LastActionPerformed instead"))
+	EGameJoltComponentEnum GameJoltComponentEnum_DEPRECATED;
+
 	/* An enum representing the last request send. Local 'Get' nodes don't count */
 	UPROPERTY(BlueprintReadWrite, Category = "GameJolt")
 	EGameJoltComponentEnum LastActionPerformed;
