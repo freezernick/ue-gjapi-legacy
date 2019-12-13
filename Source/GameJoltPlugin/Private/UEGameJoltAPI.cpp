@@ -311,6 +311,12 @@ bool UUEGameJoltAPI::RewardTrophy(int32 Trophy_ID)
 	return true;
 }
 
+void UUEGameJoltAPI::FetchAllTrophies(EGameJoltAchievedTrophies AchievedType)
+{
+	TArray<int32> Trophies;
+	FetchTrophies(AchievedType, Trophies);
+}
+
 /* Get the List of Trophies from the GameJolt Server
 *
 *	@param	AchievedType	An Enum of EGameJoltAchievedTrophies that send what type to bring back

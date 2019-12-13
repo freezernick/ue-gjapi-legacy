@@ -285,6 +285,10 @@ public:
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Reward Trophies"), Category = "GameJolt|Trophies")
 	bool RewardTrophy(int32 Trophy_ID);
 
+	/* Fetch all trophies */
+	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Fetch All Trophies"), Category = "GameJolt")
+	void FetchAllTrophies(EGameJoltAchievedTrophies AchievedType);
+
 	/* Fetch Trophies */
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Fetch Trophies"), Category = "GameJolt|Trophies")
 	void FetchTrophies(EGameJoltAchievedTrophies AchievedType, TArray<int32> Trophies_ID);
