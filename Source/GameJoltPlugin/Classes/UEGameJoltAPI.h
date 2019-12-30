@@ -8,16 +8,14 @@
 #include "Dom/JsonValue.h"
 #include "UEGameJoltAPI.generated.h"
 
-// Generate a delegate for the OnGetResult event
+/* Generates a delegate for the OnGetResult event */
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnGetResult);
 
-// Generate a delegate for the OnFailed event
+/* Generates a delegate for the OnFailed event */
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnFailed);
 
-/**
- * An enum representing the last request performed. Local 'Get' nodes don't count
- */
-UENUM(BlueprintType)		//"BlueprintType" is essential to include
+/* Represents all possible requests */
+UENUM(BlueprintType)
 enum class EGameJoltComponentEnum : uint8
 {
 	GJ_USER_AUTH		UMETA(DisplayName = "Authorize User"),
@@ -38,13 +36,16 @@ enum class EGameJoltComponentEnum : uint8
 	GJ_TIME				UMETA(DisplayName = "Fetch Server Time")
 };
 
-UENUM(BlueprintType)		//"BlueprintType" is essential to include
+/* Represents the possible selections for "Fetch Trophies" (all, achieved, unachieved) */
+UENUM(BlueprintType)
 enum class EGameJoltAchievedTrophies : uint8
 {
 	GJ_ACHIEVEDTROPHY_BLANK UMETA(DisplayName = "All Trophies"),
 	GJ_ACHIEVEDTROPHY_USER UMETA(DisplayName = "User Achieved Trophies"),
 	GJ_ACHIEVEDTROPHY_GAME UMETA(DisplayName = "Unachieved Trophies")
 };
+
+/* Contains all available information about a user */
 USTRUCT(BlueprintType)
 struct FUserInfo
 {
@@ -237,9 +238,7 @@ public:
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Init"), Category = "GameJolt")
 	void Init(FString PrivateKey, int32 GameID);
 
-	/* Logs User in */
-	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Login"), Category = "GameJolt|User")
-	void Login(FString Name, FString Token);
+#pragma region Session
 
 	/* Opens a session. You have to ping it manually with a timer. */
 	UFUNCTION(BlueprintCallable, meta = (DislayName = "Open Session"), Category = "GameJolt|Sessions")
@@ -253,6 +252,8 @@ public:
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Close Session"), Category = "GameJolt|Sessions")
 	bool CloseSession();
 
+#pragma endregion
+
 	/* Gets the time of the GameJolt Servers */
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Fetch Server Time"), Category = "GameJolt|Misc")
 	bool FetchServerTime();
@@ -261,7 +262,16 @@ public:
 	UFUNCTION(BlueprintPure, meta = (DisplayName = "Read Server Time"), Category = "GameJolt|Misc")
 	struct FDateTime ReadServerTime();
 
-	// User Stuff
+#pragma region User
+
+	/**
+	 * Sends a request to authentificate the user
+	 * Call UUEGameJoltAPI::isUserAuthorize / Is User Login to check whether the authorization was successful or not
+ 	 * @param Name The username - case insensitive
+ 	 * @param Token The token - case insensitive
+ 	 */
+	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Login"), Category = "GameJolt|User")
+	void Login(FString Name, FString Token);
 
 	/* Is User logged in? */
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Is User Login"), Category = "GameJolt|User")
@@ -279,7 +289,9 @@ public:
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Get Array of Users"), Category = "GameJolt|User")
 	TArray<FUserInfo> FetchArrayUsers();
 
-	/* Trophy Stuff */
+#pragma endregion
+
+#pragma region Trophies
 
 	/* Rewards Trophy */
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Reward Trophies"), Category = "GameJolt|Trophies")
@@ -296,6 +308,8 @@ public:
 	/* Get Trophies */
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Get Trophies"), Category = "GameJolt|Trophies")
 	TArray<FTrophyInfo> GetTrophies();
+
+#pragma endregion
 
 
 	/* Score Stuff */
@@ -350,13 +364,5 @@ public:
 	/* Gets an array with post data with the specified key */
 	UFUNCTION(BlueprintPure, meta = (DisplayName = "Get Object Array Field", HidePin = "WorldContextObject", DefaultToSelf = "WorldContextObject"), Category = "GameJolt|Request|Advanced")
 	TArray<UUEGameJoltAPI*> GetObjectArray(UObject* WorldContextObject, const FString& key);
-/*
-	UFUNCTION(Blueprintcallable, meta = (DisplayName = "Encode URL"), Category = "GameJolt")
-	FString EncodeURL(FString inputString);
-	UFUNCTION(Blueprintcallable, meta = (DisplayName = "Char to Hex"), Category = "GameJolt")
-	FString Char2Hex(FString character, int32 index);*/
-	/*
-		UFUNCTION(Blueprintcallable, meta = (DisplayName = "Get Image from URL"), Category = "GameJolt")
-		bool GetIMGURL(const FString& output, FString url);
-	*/
+
 };

@@ -10,7 +10,6 @@
 #include "Misc/DateTime.h"
 #include "Engine/World.h"
 
-/* Constructor */
 UUEGameJoltAPI::UUEGameJoltAPI(const class FObjectInitializer& PCIP)
 : Super(PCIP)
 {
@@ -25,7 +24,6 @@ UUEGameJoltAPI::UUEGameJoltAPI(const class FObjectInitializer& PCIP)
 	Game_PrivateKey = "";
 	LastActionPerformed = EGameJoltComponentEnum::GJ_USER_AUTH;
 	GameJoltComponentEnum_DEPRECATED = EGameJoltComponentEnum::GJ_USER_AUTH;
-	
 }
 
 UWorld* UUEGameJoltAPI::GetWorld() const
@@ -697,14 +695,6 @@ bool UUEGameJoltAPI::SendRequest(const FString& output, FString url)
 	
 }
 
-/**
-* This function will write the supplied key and value to the JsonWriter
-*
-* @param	writer			The JsonWriter to use
-* @param	key				Object key
-* @param	value			Object value
-*
-*/
 void UUEGameJoltAPI::WriteObject(TSharedRef<TJsonWriter<TCHAR>> writer, FString key, FJsonValue* value) {
 	if (value->Type == EJson::String) {
 		// Write simple string entry, don't a key when it isn't set
