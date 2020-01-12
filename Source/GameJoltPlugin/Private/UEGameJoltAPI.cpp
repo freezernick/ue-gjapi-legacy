@@ -11,11 +11,9 @@
 #include "Engine/World.h"
 
 /* Constructor */
-UUEGameJoltAPI::UUEGameJoltAPI(const class FObjectInitializer& PCIP)
-: Super(PCIP)
+UUEGameJoltAPI::UUEGameJoltAPI(const class FObjectInitializer& PCIP) : Super(PCIP)
 {
 	Reset();
-
 	m_LoggedIn = false;
 	bGuest = true;
 	GJAPI_SERVER = "api.gamejolt.com";
@@ -25,37 +23,28 @@ UUEGameJoltAPI::UUEGameJoltAPI(const class FObjectInitializer& PCIP)
 	Game_PrivateKey = "";
 	LastActionPerformed = EGameJoltComponentEnum::GJ_USER_AUTH;
 	GameJoltComponentEnum_DEPRECATED = EGameJoltComponentEnum::GJ_USER_AUTH;
-	
 }
 
+/* Prevents crashes within 'Get...' functions */
 UWorld* UUEGameJoltAPI::GetWorld() const
 {
 	return World;
 }
 
-/*
-*	Get the Game ID
-*
-*	@return Game_ID
-*/
+/* Gets the GameID */
 int32 UUEGameJoltAPI::GetGameID()
 {
 	return Game_ID;
 }
 
-/*
-	Initializes GameJolt API
-*/
+/* Sets information needed for all requests */
 void UUEGameJoltAPI::Init(FString PrivateKey, int32 GameID)
 {
 	Game_ID = GameID;
 	Game_PrivateKey = PrivateKey;
 }
 
-/**
- * Fetches the time of the GameJolt servers
- * @return Whether the request was ok or not
-*/
+/* Gets the time of the GameJolt servers */
 bool UUEGameJoltAPI::FetchServerTime()
 {
 	FString GameIDString;
@@ -66,10 +55,7 @@ bool UUEGameJoltAPI::FetchServerTime()
 	return SendRequest(output, TEXT("/time/?format=json&game_id=") + GameIDString);
 }
 
-/**
- * Creates a FDateTime struct from the FetchServerTime response
- * @return The FDateTime struct
- */
+/* Puts the requested server time in a readable format */
 FDateTime UUEGameJoltAPI::ReadServerTime()
 {
 	UUEGameJoltAPI* responseField = NULL;
@@ -98,37 +84,19 @@ FDateTime UUEGameJoltAPI::ReadServerTime()
 	return FDateTime(Year, Month, Day, Hour, Minute, Second);
 }
 
-/**
-*	Get the Game Private Key
-*
-*	
-*
-*	@return Game_ID
-*/
+/* Returns the private key */
 FString UUEGameJoltAPI::GetGamePrivateKey()
 {
 	return Game_PrivateKey;
 }
 
-/**
-*	Get the Username
-*
-*
-*
-*	@return UserName
-*/
+/* Returns the username */
 FString UUEGameJoltAPI::GetUsername()
 {
 	return UserName;
 }
 
-/**
-* Create a new instance of the UUEGameJoltAPI class, for use in Blueprint graphs.
-*
-* @param	WorldContextObject		The current context
-*
-* @return	A pointer to the newly created post data
-*/
+/* Creates a new instance of the UUEGameJoltAPI class, for use in Blueprint graphs. */
 UUEGameJoltAPI* UUEGameJoltAPI::Create(UObject* WorldContextObject) {
 	// Get the world object from the context
 	UWorld* World = GEngine->GetWorldFromContextObjectChecked(WorldContextObject);
@@ -139,6 +107,7 @@ UUEGameJoltAPI* UUEGameJoltAPI::Create(UObject* WorldContextObject) {
 	return fieldData;
 }
 
+/* Sends a request to authentificate the user */
 void UUEGameJoltAPI::Login(FString name, FString token)
 {
 	FString output;
@@ -148,12 +117,7 @@ void UUEGameJoltAPI::Login(FString name, FString token)
 	SendRequest(output, TEXT("/users/auth/?format=json&game_id=") + GameIDString + TEXT("&username=") + name + TEXT("&user_token=") + token);
 }
 
-
-/**
-* Check if the user has logged in Succesfully
-*
-* @return	outAuthorize true if it Successed false if it fails
-*/
+/* Checks if the authentification was succesful */
 bool UUEGameJoltAPI::isUserAuthorize()
 {
 	bool outAuthorize;
@@ -178,11 +142,7 @@ bool UUEGameJoltAPI::isUserAuthorize()
 	return true;
 }
 
-/**
-* Returns the Users info from Gamejolt
-*
-* @return	bool true if it Successed false if it failed
-*/
+/* Gets information the current user */
 bool UUEGameJoltAPI::FetchUser()
 {
 	bool ret = true;
@@ -200,15 +160,14 @@ bool UUEGameJoltAPI::FetchUser()
 	return true;
 }
 
-/**
-* LogoffUser Clears users Data
-*/
+/* Resets user related properties */
 void UUEGameJoltAPI::LogOffUser()
 {
 	m_LoggedIn = false;
 	bGuest = true;
 }
 
+/* Opens a session */
 bool UUEGameJoltAPI::OpenSession()
 {
 	FString output;
@@ -220,9 +179,7 @@ bool UUEGameJoltAPI::OpenSession()
 		TEXT("&username=") + UserName + TEXT("&user_token=") + UserToken);
 }
 
-/*
-	Pings the Session. Every 30 to 60 seconds is good.
-*/
+/* Pings the session */
 bool UUEGameJoltAPI::PingSession()
 {
 	FString output;
@@ -234,9 +191,7 @@ bool UUEGameJoltAPI::PingSession()
 		TEXT("&username=") + UserName + TEXT("&user_token=") + UserToken);
 }
 
-/*
-	Closes the Session.
-*/
+/* Closes the session */
 bool UUEGameJoltAPI::CloseSession()
 {
 	FString output;
@@ -249,12 +204,7 @@ bool UUEGameJoltAPI::CloseSession()
 		TEXT("&user_token=") + UserToken);
 }
 
-/***
-* Get the array of users for Gamejolt and put it in a array of FUserInfo
-*
-*
-*	@return returnUserInfo A struct array with users info
-*/
+/* Gets an array of users and puts them in an array of FUserInfo structs */
 TArray<FUserInfo>  UUEGameJoltAPI::FetchArrayUsers()
 {
 	TArray<UUEGameJoltAPI*> returnArray = GetObject("response")->GetObjectArray(GetObject("response"), "users");
@@ -279,13 +229,7 @@ TArray<FUserInfo>  UUEGameJoltAPI::FetchArrayUsers()
 	return returnUserInfo;
 }
 
-/***
-* Give the User Trophies
-* Give the User Trophies
-*
-*
-*	@return returnUserInfo A struct array with users info
-*/
+/* Awards the current user a trophy */
 bool UUEGameJoltAPI::RewardTrophy(int32 Trophy_ID)
 {
 
@@ -311,18 +255,14 @@ bool UUEGameJoltAPI::RewardTrophy(int32 Trophy_ID)
 	return true;
 }
 
+/* Gets information for all trophies */
 void UUEGameJoltAPI::FetchAllTrophies(EGameJoltAchievedTrophies AchievedType)
 {
 	TArray<int32> Trophies;
 	FetchTrophies(AchievedType, Trophies);
 }
 
-/* Get the List of Trophies from the GameJolt Server
-*
-*	@param	AchievedType	An Enum of EGameJoltAchievedTrophies that send what type to bring back
-*	@param	Tropies_ID		An Array of int32 that search for specific trophies. If array is empty it return all trophies.
-*	
-*/
+/* Gets information for the selected trophies */
 void UUEGameJoltAPI::FetchTrophies(EGameJoltAchievedTrophies AchievedType, TArray<int32> Trophies_ID)
 {
 	TArray<FTrophyInfo> returnTrophies;
@@ -382,11 +322,7 @@ void UUEGameJoltAPI::FetchTrophies(EGameJoltAchievedTrophies AchievedType, TArra
 	return;
 }
 
-/* Get the list of trophies from the Gamejolt server
-*
-*	@return	returnTrophy	A array of Struct FTrophyInfo
-*
-*/
+/* Gets the trophy information from the fetched trophies */
 TArray<FTrophyInfo> UUEGameJoltAPI::GetTrophies()
 {
 	TArray<FTrophyInfo> returnTrophy;
@@ -408,11 +344,7 @@ TArray<FTrophyInfo> UUEGameJoltAPI::GetTrophies()
 		return returnTrophy;
 }
 
-/* Fetch Returns a list of scores either for a user or globally for a game.
-*
-*	@return	returnTrophy	A array of Struct FTrophyInfo
-*
-*/
+/* Returns a list of scores either for a user or globally for a game */
 bool UUEGameJoltAPI::FetchScoreboard(int32 ScoreLimit, int32 Table_id)
 {
 	TArray<FTrophyInfo> returnTrophies;
@@ -434,7 +366,6 @@ bool UUEGameJoltAPI::FetchScoreboard(int32 ScoreLimit, int32 Table_id)
 		(ScoreLimit > 0 ? "&limit=" : "") + (ScoreLimit > 0 ? ScoreLimitString : "") +
 		(Table_id > 0 ? "&table_id=" : "") + (Table_id > 0 ? TableIDString : ""));
 
-
 	if (!ret)
 	{
 		UE_LOG(GJAPI, Error, TEXT("Could not fetch scoreboard."));
@@ -444,11 +375,7 @@ bool UUEGameJoltAPI::FetchScoreboard(int32 ScoreLimit, int32 Table_id)
 	return true;
 }
 
-/* Returns a list of scores either for a user or globally for a game.
-*
-*	@return	returnTrophy	A array of Struct FScoreInfo
-*
-*/
+/* Gets the list of scores fetched with FetchScoreboard */
 TArray<FScoreInfo> UUEGameJoltAPI::GetScoreboard()
 {
 	TArray<FScoreInfo> returnScoreInfo;
@@ -469,19 +396,7 @@ TArray<FScoreInfo> UUEGameJoltAPI::GetScoreboard()
 	return returnScoreInfo;
 }
 
-/**TODO: Add More Functionality for Guest user on AddScore
-*/
-/* Adds a score for a user or guest.
-*
-*	@param	UserScore		A String Value associated with the score. Example: "234 Jumps".
-*	@param	UserScore_Sort	A Int sorting value associated with the score. All sorting will work off of this number. Example: "234".
-*	@param	GuestUser		The guest's name. Leave blank if you're storing for a user.
-*	@param	extra_data		If there's any extra data you would like to store (as a string), you can use this variable. Note that this is only retrievable through the API. It never shows on the actual site.
-*	@param	table_id		The id of the high score table that you want to submit to. If left blank the score will be submitted to the primary high score table.
-*	
-*	@return	bool			True if it  Succeed False if it Fails
-*
-*/
+/* Adds an entry to a scoreboard */
 bool UUEGameJoltAPI::AddScore(FString UserScore, int32 UserScore_Sort, FString GuestUser, FString extra_data, int32 table_id)
 {
 	bool ret = true;
@@ -510,11 +425,7 @@ bool UUEGameJoltAPI::AddScore(FString UserScore, int32 UserScore_Sort, FString G
 	return true;
 }
 
-/* Returns a list of high score tables for a game.
-*
-*	@return	bool	True if it Succeed False if it fails
-*
-*/
+/* Fetches all scoreboard tables */
 bool UUEGameJoltAPI::FetchScoreboardTable()
 {
 	bool ret = true;
@@ -536,12 +447,7 @@ bool UUEGameJoltAPI::FetchScoreboardTable()
 	return true;
 }
 
-
-/* Geta list of high score tables for a game and put them in a Array of FScoreTableInfo.
-*
-*	@return	returnTableinfo	A array of Struct FScoreTableInfo
-*
-*/
+/* Creates an array of FScoreTableInfo structs for all scoreboards of the game */
 TArray<FScoreTableInfo> UUEGameJoltAPI::GetScoreboardTable()
 {
 	TArray<FScoreTableInfo> returnTableinfo;
@@ -559,15 +465,7 @@ TArray<FScoreTableInfo> UUEGameJoltAPI::GetScoreboardTable()
 	return returnTableinfo;
 }
 
-/**
-*Gets the post data object from the post data with the given key
-*
-* @param	WorldContextObject		Array of strings
-* @param	key						Key
-*
-* @return	The object itself
-*/
-
+/* Gets nested post data from the object with the specified key */
 UUEGameJoltAPI* UUEGameJoltAPI::GetObject(const FString& key)
 {
 	UUEGameJoltAPI* fieldObj = NULL;
@@ -587,6 +485,7 @@ UUEGameJoltAPI* UUEGameJoltAPI::GetObject(const FString& key)
 	return fieldObj;
 }
 
+/* Gets a string field */
 FString UUEGameJoltAPI::GetString(const FString& key) const
 {
 	FString outString;
@@ -598,6 +497,8 @@ FString UUEGameJoltAPI::GetString(const FString& key) const
 
 	return outString;
 }
+
+/* Gets a bool field */
 bool UUEGameJoltAPI::GetBool(const FString& key)const
 {
 	bool outBool;
@@ -608,6 +509,8 @@ bool UUEGameJoltAPI::GetBool(const FString& key)const
 	}
 	return outBool;
 }
+
+/* Gets an integer field */
 int32 UUEGameJoltAPI::GetInt(const FString& key) const
 {
 	int32 outInt;
@@ -619,13 +522,7 @@ int32 UUEGameJoltAPI::GetInt(const FString& key) const
 	return outInt;
 }
 
-/**
-* Gets a string array from the post data with the given key
-*
-* @param	key						Key
-*
-* @return	The requested array of strings
-*/
+/* Gets a string array of all keys from the post data */
 TArray<FString> UUEGameJoltAPI::GetObjectKeys(UObject* WorldContextObject)
 {
 	TArray<FString> stringArray;
@@ -638,6 +535,7 @@ TArray<FString> UUEGameJoltAPI::GetObjectKeys(UObject* WorldContextObject)
 	return stringArray;
 }
 
+/* Gets an array of post data */
 TArray<UUEGameJoltAPI*> UUEGameJoltAPI::GetObjectArray(UObject* WorldContextObject, const FString& key)
 {
 	TArray<UUEGameJoltAPI*> objectArray;
@@ -662,6 +560,7 @@ TArray<UUEGameJoltAPI*> UUEGameJoltAPI::GetObjectArray(UObject* WorldContextObje
 	return objectArray;
 }
 
+/* Sends a request */
 bool UUEGameJoltAPI::SendRequest(const FString& output, FString url)
 {
 
@@ -697,14 +596,7 @@ bool UUEGameJoltAPI::SendRequest(const FString& output, FString url)
 	
 }
 
-/**
-* This function will write the supplied key and value to the JsonWriter
-*
-* @param	writer			The JsonWriter to use
-* @param	key				Object key
-* @param	value			Object value
-*
-*/
+/* Writes data */
 void UUEGameJoltAPI::WriteObject(TSharedRef<TJsonWriter<TCHAR>> writer, FString key, FJsonValue* value) {
 	if (value->Type == EJson::String) {
 		// Write simple string entry, don't a key when it isn't set
@@ -747,6 +639,7 @@ void UUEGameJoltAPI::WriteObject(TSharedRef<TJsonWriter<TCHAR>> writer, FString 
 	}
 }
 
+/* Creates a http-URL from the input */
 FString UUEGameJoltAPI::CreateURL(FString inputURL) {
 	if (!inputURL.StartsWith("http")) {
 		return "http://" + inputURL;
@@ -755,13 +648,7 @@ FString UUEGameJoltAPI::CreateURL(FString inputURL) {
 	return inputURL;
 }
 
-/**
-* Creates new data from the
-*
-* @param	key			Key
-*
-* @return	The requested string, empty if failed
-*/
+/* Creates data from a string */
 void UUEGameJoltAPI::FromString(const FString& dataString) {
 	TSharedRef<TJsonReader<TCHAR>> JsonReader = TJsonReaderFactory<TCHAR>::Create(dataString);
 
@@ -776,15 +663,7 @@ void UUEGameJoltAPI::FromString(const FString& dataString) {
 	Content = dataString;
 }
 
-
-/**
-* Callback for IHttpRequest::OnProcessRequestComplete()
-*
-* @param	Request					HTTP request pointer
-* @param	Response				Response pointer
-* @param	bWasSuccessful			Whether the request was successful or not
-*
-*/
+/* Callback for IHttpRequest::OnProcessRequestComplete() */
 void UUEGameJoltAPI::OnReady(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful) {
 	if (!bWasSuccessful) {
 		UE_LOG(GJAPI, Warning, TEXT("Response was invalid! Please check the URL."));
@@ -799,6 +678,8 @@ void UUEGameJoltAPI::OnReady(FHttpRequestPtr Request, FHttpResponsePtr Response,
 	// Broadcast the result event
 	OnGetResult.Broadcast();
 }
+
+/* Resets the saved data */
 void UUEGameJoltAPI::Reset()
 {
 	if (Data.IsValid()){
