@@ -344,11 +344,7 @@ TArray<FTrophyInfo> UUEGameJoltAPI::GetTrophies()
 		return returnTrophy;
 }
 
-/* Fetch Returns a list of scores either for a user or globally for a game.
-*
-*	@return	returnTrophy	A array of Struct FTrophyInfo
-*
-*/
+/* Returns a list of scores either for a user or globally for a game */
 bool UUEGameJoltAPI::FetchScoreboard(int32 ScoreLimit, int32 Table_id)
 {
 	TArray<FTrophyInfo> returnTrophies;
@@ -370,7 +366,6 @@ bool UUEGameJoltAPI::FetchScoreboard(int32 ScoreLimit, int32 Table_id)
 		(ScoreLimit > 0 ? "&limit=" : "") + (ScoreLimit > 0 ? ScoreLimitString : "") +
 		(Table_id > 0 ? "&table_id=" : "") + (Table_id > 0 ? TableIDString : ""));
 
-
 	if (!ret)
 	{
 		UE_LOG(GJAPI, Error, TEXT("Could not fetch scoreboard."));
@@ -380,11 +375,7 @@ bool UUEGameJoltAPI::FetchScoreboard(int32 ScoreLimit, int32 Table_id)
 	return true;
 }
 
-/* Returns a list of scores either for a user or globally for a game.
-*
-*	@return	returnTrophy	A array of Struct FScoreInfo
-*
-*/
+/* Gets the list of scores fetched with FetchScoreboard */
 TArray<FScoreInfo> UUEGameJoltAPI::GetScoreboard()
 {
 	TArray<FScoreInfo> returnScoreInfo;
@@ -405,19 +396,7 @@ TArray<FScoreInfo> UUEGameJoltAPI::GetScoreboard()
 	return returnScoreInfo;
 }
 
-/**TODO: Add More Functionality for Guest user on AddScore
-*/
-/* Adds a score for a user or guest.
-*
-*	@param	UserScore		A String Value associated with the score. Example: "234 Jumps".
-*	@param	UserScore_Sort	A Int sorting value associated with the score. All sorting will work off of this number. Example: "234".
-*	@param	GuestUser		The guest's name. Leave blank if you're storing for a user.
-*	@param	extra_data		If there's any extra data you would like to store (as a string), you can use this variable. Note that this is only retrievable through the API. It never shows on the actual site.
-*	@param	table_id		The id of the high score table that you want to submit to. If left blank the score will be submitted to the primary high score table.
-*	
-*	@return	bool			True if it  Succeed False if it Fails
-*
-*/
+/* Adds an entry to a scoreboard */
 bool UUEGameJoltAPI::AddScore(FString UserScore, int32 UserScore_Sort, FString GuestUser, FString extra_data, int32 table_id)
 {
 	bool ret = true;
@@ -467,7 +446,6 @@ bool UUEGameJoltAPI::FetchScoreboardTable()
 
 	return true;
 }
-
 
 /* Creates an array of FScoreTableInfo structs for all scoreboards of the game */
 TArray<FScoreTableInfo> UUEGameJoltAPI::GetScoreboardTable()
@@ -557,6 +535,7 @@ TArray<FString> UUEGameJoltAPI::GetObjectKeys(UObject* WorldContextObject)
 	return stringArray;
 }
 
+/* Gets an array of post data */
 TArray<UUEGameJoltAPI*> UUEGameJoltAPI::GetObjectArray(UObject* WorldContextObject, const FString& key)
 {
 	TArray<UUEGameJoltAPI*> objectArray;
@@ -581,6 +560,7 @@ TArray<UUEGameJoltAPI*> UUEGameJoltAPI::GetObjectArray(UObject* WorldContextObje
 	return objectArray;
 }
 
+/* Sends a request */
 bool UUEGameJoltAPI::SendRequest(const FString& output, FString url)
 {
 
@@ -616,6 +596,7 @@ bool UUEGameJoltAPI::SendRequest(const FString& output, FString url)
 	
 }
 
+/* Writes data */
 void UUEGameJoltAPI::WriteObject(TSharedRef<TJsonWriter<TCHAR>> writer, FString key, FJsonValue* value) {
 	if (value->Type == EJson::String) {
 		// Write simple string entry, don't a key when it isn't set
@@ -667,13 +648,7 @@ FString UUEGameJoltAPI::CreateURL(FString inputURL) {
 	return inputURL;
 }
 
-/**
-* Creates new data from the
-*
-* @param	key			Key
-*
-* @return	The requested string, empty if failed
-*/
+/* Creates data from a string */
 void UUEGameJoltAPI::FromString(const FString& dataString) {
 	TSharedRef<TJsonReader<TCHAR>> JsonReader = TJsonReaderFactory<TCHAR>::Create(dataString);
 
@@ -687,7 +662,6 @@ void UUEGameJoltAPI::FromString(const FString& dataString) {
 	// Assign the request content
 	Content = dataString;
 }
-
 
 /* Callback for IHttpRequest::OnProcessRequestComplete() */
 void UUEGameJoltAPI::OnReady(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful) {

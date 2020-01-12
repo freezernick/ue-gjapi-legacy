@@ -210,9 +210,9 @@ public:
 
 	/**
 	 * Creates a new instance of the UUEGameJoltAPI class, for use in Blueprint graphs.
-	* @param WorldContextObject The current context (default to self / this)
-	* @return A pointer to the newly created post data
-	*/
+	 * @param WorldContextObject The current context (default to self / this)
+	 * @return A pointer to the newly created post data
+	**/
 	UFUNCTION(BlueprintPure, meta = (DisplayName = "Create GameJolt API Data", HidePin = "WorldContextObject", DefaultToSelf = "WorldContextObject"), Category = "GameJolt")
 	static UUEGameJoltAPI* Create(UObject* WorldContextObject);
 
@@ -257,13 +257,13 @@ public:
 
 	/** Returns the private key 
 	 * @return The private key - Empty if not specified
-	*/
+	**/
 	UFUNCTION(BlueprintPure, meta = (DisplayName = "Get Your Game Private Key"), Category = "GameJolt")
 	FString GetGamePrivateKey();
 	
 	/** Gets the username 
 	 * @return The username - Empty if not logged in
-	*/
+	**/
 	UFUNCTION(BlueprintPure, meta = (DisplayName = "Get Username"), Category = "GameJolt|User")
 	FString GetUsername();
 
@@ -391,15 +391,29 @@ public:
 
 #pragma region Scores
 
-	/* Fetch Scoreboard*/
+	/**
+	 * Returns a list of scores either for a user or globally for a game
+	 * @return True if the request succeded, false if not
+	**/
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Fetch Scoreboard"), Category = "GameJolt|Scoreboard")
 	bool FetchScoreboard(int32 ScoreLimit, int32 Table_id);
 
-	/* Gets Scoreboard */
+	/**
+	 * Gets the list of scores fetched with FetchScoreboard
+	 * @return An array of FScoreInfo structs for all entries
+	**/
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Get Scoreboard"), Category = "GameJolt|Scoreboard")
 	TArray<FScoreInfo> GetScoreboard();
 
-	/* Adds Score to Scoreboard */
+	/** 
+	 * Adds an entry to a scoreboard
+	 * @param UserScore A String value associated with the score. Example: "234 Jumps".
+	 * @param UserScore_Sort An integer sorting value associated with the score. All sorting will work off of this number. Example: "234".
+	 * @param GuestUser The guest's name. Leave blank if you're storing for a user.
+	 * @param extra_data If there's any extra data you would like to store (as a string), you can use this variable. This data is never shown to the user.
+	 * @param table_id The id of the high score table that you want to submit to. If left blank the score will be submitted to the primary high score table.
+	 * @return True if the request succeded, false if not
+	**/
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Add Score to Scoreboard"), Category = "GameJolt|Scoreboard")
 	bool AddScore(FString UserScore, int32 UserScore_Sort, FString GuestUser, FString extra_data, int32 table_id);
 
@@ -460,7 +474,11 @@ public:
 	UFUNCTION(Blueprintpure, meta = (Displayname = "Get Object Keys", HidePin = "WorldContextObject", DefaultToSelf = "WorldContextObject"), Category = "GameJolt|Request|Advanced")
 	TArray<FString> GetObjectKeys(UObject* WorldContextObject);
 
-	/* Gets an array with post data with the specified key */
+	/**
+	 * Gets an array fromt the post data
+	 * @param key The key of the array
+	 * @return The array assigned to the key
+	 **/
 	UFUNCTION(BlueprintPure, meta = (DisplayName = "Get Object Array Field", HidePin = "WorldContextObject", DefaultToSelf = "WorldContextObject"), Category = "GameJolt|Request|Advanced")
 	TArray<UUEGameJoltAPI*> GetObjectArray(UObject* WorldContextObject, const FString& key);
 
