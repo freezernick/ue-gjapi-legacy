@@ -10,11 +10,10 @@
 #include "Misc/DateTime.h"
 #include "Engine/World.h"
 
-UUEGameJoltAPI::UUEGameJoltAPI(const class FObjectInitializer& PCIP)
-: Super(PCIP)
+/* Constructor */
+UUEGameJoltAPI::UUEGameJoltAPI(const class FObjectInitializer& PCIP) : Super(PCIP)
 {
 	Reset();
-
 	m_LoggedIn = false;
 	bGuest = true;
 	GJAPI_SERVER = "api.gamejolt.com";
@@ -26,34 +25,26 @@ UUEGameJoltAPI::UUEGameJoltAPI(const class FObjectInitializer& PCIP)
 	GameJoltComponentEnum_DEPRECATED = EGameJoltComponentEnum::GJ_USER_AUTH;
 }
 
+/* Prevents crashes within 'Get...' functions */
 UWorld* UUEGameJoltAPI::GetWorld() const
 {
 	return World;
 }
 
-/*
-*	Get the Game ID
-*
-*	@return Game_ID
-*/
+/* Gets the GameID */
 int32 UUEGameJoltAPI::GetGameID()
 {
 	return Game_ID;
 }
 
-/*
-	Initializes GameJolt API
-*/
+/* Sets information needed for all requests */
 void UUEGameJoltAPI::Init(FString PrivateKey, int32 GameID)
 {
 	Game_ID = GameID;
 	Game_PrivateKey = PrivateKey;
 }
 
-/**
- * Fetches the time of the GameJolt servers
- * @return Whether the request was ok or not
-*/
+/* Gets the time of the GameJolt servers */
 bool UUEGameJoltAPI::FetchServerTime()
 {
 	FString GameIDString;
@@ -64,10 +55,7 @@ bool UUEGameJoltAPI::FetchServerTime()
 	return SendRequest(output, TEXT("/time/?format=json&game_id=") + GameIDString);
 }
 
-/**
- * Creates a FDateTime struct from the FetchServerTime response
- * @return The FDateTime struct
- */
+/* Puts the requested server time in a readable format */
 FDateTime UUEGameJoltAPI::ReadServerTime()
 {
 	UUEGameJoltAPI* responseField = NULL;
@@ -96,37 +84,19 @@ FDateTime UUEGameJoltAPI::ReadServerTime()
 	return FDateTime(Year, Month, Day, Hour, Minute, Second);
 }
 
-/**
-*	Get the Game Private Key
-*
-*	
-*
-*	@return Game_ID
-*/
+/* Returns the private key */
 FString UUEGameJoltAPI::GetGamePrivateKey()
 {
 	return Game_PrivateKey;
 }
 
-/**
-*	Get the Username
-*
-*
-*
-*	@return UserName
-*/
+/* Returns the username */
 FString UUEGameJoltAPI::GetUsername()
 {
 	return UserName;
 }
 
-/**
-* Create a new instance of the UUEGameJoltAPI class, for use in Blueprint graphs.
-*
-* @param	WorldContextObject		The current context
-*
-* @return	A pointer to the newly created post data
-*/
+/* Creates a new instance of the UUEGameJoltAPI class, for use in Blueprint graphs. */
 UUEGameJoltAPI* UUEGameJoltAPI::Create(UObject* WorldContextObject) {
 	// Get the world object from the context
 	UWorld* World = GEngine->GetWorldFromContextObjectChecked(WorldContextObject);
@@ -137,6 +107,7 @@ UUEGameJoltAPI* UUEGameJoltAPI::Create(UObject* WorldContextObject) {
 	return fieldData;
 }
 
+/* Sends a request to authentificate the user */
 void UUEGameJoltAPI::Login(FString name, FString token)
 {
 	FString output;
@@ -146,12 +117,7 @@ void UUEGameJoltAPI::Login(FString name, FString token)
 	SendRequest(output, TEXT("/users/auth/?format=json&game_id=") + GameIDString + TEXT("&username=") + name + TEXT("&user_token=") + token);
 }
 
-
-/**
-* Check if the user has logged in Succesfully
-*
-* @return	outAuthorize true if it Successed false if it fails
-*/
+/* Checks if the authentification was succesful */
 bool UUEGameJoltAPI::isUserAuthorize()
 {
 	bool outAuthorize;
@@ -176,11 +142,7 @@ bool UUEGameJoltAPI::isUserAuthorize()
 	return true;
 }
 
-/**
-* Returns the Users info from Gamejolt
-*
-* @return	bool true if it Successed false if it failed
-*/
+/* Gets information the current user */
 bool UUEGameJoltAPI::FetchUser()
 {
 	bool ret = true;
@@ -198,15 +160,14 @@ bool UUEGameJoltAPI::FetchUser()
 	return true;
 }
 
-/**
-* LogoffUser Clears users Data
-*/
+/* Resets user related properties */
 void UUEGameJoltAPI::LogOffUser()
 {
 	m_LoggedIn = false;
 	bGuest = true;
 }
 
+/* Opens a session */
 bool UUEGameJoltAPI::OpenSession()
 {
 	FString output;
@@ -218,9 +179,7 @@ bool UUEGameJoltAPI::OpenSession()
 		TEXT("&username=") + UserName + TEXT("&user_token=") + UserToken);
 }
 
-/*
-	Pings the Session. Every 30 to 60 seconds is good.
-*/
+/* Pings the session */
 bool UUEGameJoltAPI::PingSession()
 {
 	FString output;
@@ -232,9 +191,7 @@ bool UUEGameJoltAPI::PingSession()
 		TEXT("&username=") + UserName + TEXT("&user_token=") + UserToken);
 }
 
-/*
-	Closes the Session.
-*/
+/* Closes the session */
 bool UUEGameJoltAPI::CloseSession()
 {
 	FString output;
@@ -247,12 +204,7 @@ bool UUEGameJoltAPI::CloseSession()
 		TEXT("&user_token=") + UserToken);
 }
 
-/***
-* Get the array of users for Gamejolt and put it in a array of FUserInfo
-*
-*
-*	@return returnUserInfo A struct array with users info
-*/
+/* Gets an array of users and puts them in an array of FUserInfo structs */
 TArray<FUserInfo>  UUEGameJoltAPI::FetchArrayUsers()
 {
 	TArray<UUEGameJoltAPI*> returnArray = GetObject("response")->GetObjectArray(GetObject("response"), "users");
@@ -277,13 +229,7 @@ TArray<FUserInfo>  UUEGameJoltAPI::FetchArrayUsers()
 	return returnUserInfo;
 }
 
-/***
-* Give the User Trophies
-* Give the User Trophies
-*
-*
-*	@return returnUserInfo A struct array with users info
-*/
+/* Awards the current user a trophy */
 bool UUEGameJoltAPI::RewardTrophy(int32 Trophy_ID)
 {
 
@@ -309,18 +255,14 @@ bool UUEGameJoltAPI::RewardTrophy(int32 Trophy_ID)
 	return true;
 }
 
+/* Gets information for all trophies */
 void UUEGameJoltAPI::FetchAllTrophies(EGameJoltAchievedTrophies AchievedType)
 {
 	TArray<int32> Trophies;
 	FetchTrophies(AchievedType, Trophies);
 }
 
-/* Get the List of Trophies from the GameJolt Server
-*
-*	@param	AchievedType	An Enum of EGameJoltAchievedTrophies that send what type to bring back
-*	@param	Tropies_ID		An Array of int32 that search for specific trophies. If array is empty it return all trophies.
-*	
-*/
+/* Gets information for the selected trophies */
 void UUEGameJoltAPI::FetchTrophies(EGameJoltAchievedTrophies AchievedType, TArray<int32> Trophies_ID)
 {
 	TArray<FTrophyInfo> returnTrophies;
@@ -380,11 +322,7 @@ void UUEGameJoltAPI::FetchTrophies(EGameJoltAchievedTrophies AchievedType, TArra
 	return;
 }
 
-/* Get the list of trophies from the Gamejolt server
-*
-*	@return	returnTrophy	A array of Struct FTrophyInfo
-*
-*/
+/* Gets the trophy information from the fetched trophies */
 TArray<FTrophyInfo> UUEGameJoltAPI::GetTrophies()
 {
 	TArray<FTrophyInfo> returnTrophy;

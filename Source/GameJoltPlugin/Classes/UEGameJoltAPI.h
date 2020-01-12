@@ -208,7 +208,11 @@ public:
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "From String"), Category = "GameJolt|Request")
 	void FromString(const FString& dataString);
 
-	/* Creates a new post data object */
+	/**
+	 * Creates a new instance of the UUEGameJoltAPI class, for use in Blueprint graphs.
+	* @param WorldContextObject The current context (default to self / this)
+	* @return A pointer to the newly created post data
+	*/
 	UFUNCTION(BlueprintPure, meta = (DisplayName = "Create GameJolt API Data", HidePin = "WorldContextObject", DefaultToSelf = "WorldContextObject"), Category = "GameJolt")
 	static UUEGameJoltAPI* Create(UObject* WorldContextObject);
 
@@ -244,43 +248,71 @@ public:
 
 	/* Public Functions */
 
-	/* Gets GameID */
+	/**
+	 * Returns the game ID
+	 * @return The game ID - 0 is not specified
+	 **/
 	UFUNCTION(BlueprintPure, meta = (DisplayName = "Get Your Game ID"), Category = "GameJolt")
 	int32 GetGameID();
 
-	/* Gets Private Key */
+	/** Returns the private key 
+	 * @return The private key - Empty if not specified
+	*/
 	UFUNCTION(BlueprintPure, meta = (DisplayName = "Get Your Game Private Key"), Category = "GameJolt")
 	FString GetGamePrivateKey();
 	
-	/* Gets Username */
+	/** Gets the username 
+	 * @return The username - Empty if not logged in
+	*/
 	UFUNCTION(BlueprintPure, meta = (DisplayName = "Get Username"), Category = "GameJolt|User")
 	FString GetUsername();
 
-	/* Initializes GameJolt API */
+	/**
+	 * Sets information needed for all requests
+	 * You can find these values in the GameJolt API section of your game's dashboard
+	 * @param PrivateKey The private key of your game 
+	 * @param GameID The id of your game 
+	 **/
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Init"), Category = "GameJolt")
 	void Init(FString PrivateKey, int32 GameID);
 
 #pragma region Session
 
-	/* Opens a session. You have to ping it manually with a timer. */
+	/**
+	 * Opens a session. You'll have to ping it manually with a timer
+	 * @return True if the request succeded, false if not
+	 **/
 	UFUNCTION(BlueprintCallable, meta = (DislayName = "Open Session"), Category = "GameJolt|Sessions")
 	bool OpenSession();
 
-	/* Ping the session. Ping it every 30 to 60 seconds. */
+	/**
+	 * Pings the Session. Every 30 to 60 seconds is good.
+	 * @return True if the request succeded, false if not
+	 **/
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Ping Session"), Category = "GameJolt|Sessions")
 	bool PingSession();
 
-	/* Closes the session. */
+	/**
+	 * Closes the session
+	 * @return True if the request succeded, false if not
+	 **/
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Close Session"), Category = "GameJolt|Sessions")
 	bool CloseSession();
 
 #pragma endregion
 
-	/* Gets the time of the GameJolt Servers */
+	/**
+	 * Gets the time of the GameJolt servers
+	 * @return True if the request succeded, false if not
+	 **/
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Fetch Server Time"), Category = "GameJolt|Misc")
 	bool FetchServerTime();
 
-	/* Outputs the server time that was fetched with FetchServerTime */
+	/**
+	 * Puts the requested server time in a readable format
+	 * UUEGameJoltAPI::FetchServerTime has to be called before this function
+	 * @return The server time in a FDateTime struct
+	 */
 	UFUNCTION(BlueprintPure, meta = (DisplayName = "Read Server Time"), Category = "GameJolt|Misc")
 	struct FDateTime ReadServerTime();
 
@@ -295,19 +327,28 @@ public:
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Login"), Category = "GameJolt|User")
 	void Login(FString Name, FString Token);
 
-	/* Is User logged in? */
+	/**
+	 * Checks if the authentification was succesful
+	 * @return True if the user could be logged in, false if not
+	*/
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Is User Login"), Category = "GameJolt|User")
 	bool isUserAuthorize();
 
-	/* Logs User off */
+	/* Resets user related properties */
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Logoff User"), Category = "GameJolt|User")
 	void LogOffUser();
 
-	/* Fetch User */
+	/** 
+	 * Gets information about the current user
+	 * @return True if it the request succeded and false if it failed
+	 **/
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Fetch Users"), Category = "GameJolt|User")
 	bool FetchUser();
 
-	/* Gets Array of Users */
+	/**
+	 * Gets an array of users and puts them in an array of FUserInfo structs
+	 * @return An array with the FUserInfo structs
+	*/
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Get Array of Users"), Category = "GameJolt|User")
 	TArray<FUserInfo> FetchArrayUsers();
 
@@ -315,26 +356,40 @@ public:
 
 #pragma region Trophies
 
-	/* Rewards Trophy */
+	/** 
+	 * Awards the current user a trophy
+	 * @return True if the request succeded, false if not
+	 **/
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Reward Trophies"), Category = "GameJolt|Trophies")
 	bool RewardTrophy(int32 Trophy_ID);
 
-	/* Fetch all trophies */
+	/**
+	 * Gets information for all trophies
+	 * This is meant for the use in Blueprints
+	 * It's just a wrapper around FetchTrophies with an empty TArray as an parameter
+	 * You can call UUEGameJoltAPI::FetchTrophies directly
+	 **/
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Fetch All Trophies"), Category = "GameJolt")
 	void FetchAllTrophies(EGameJoltAchievedTrophies AchievedType);
 
-	/* Fetch Trophies */
+	/**
+	 * Gets information for the selected trophies
+	 * @param AchievedType Whether only achieved, unachieved or all trophies should be fetched
+	 * @param Tropies_ID An array of trophy IDs. An empty array will return all trophies
+	 */
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Fetch Trophies"), Category = "GameJolt|Trophies")
 	void FetchTrophies(EGameJoltAchievedTrophies AchievedType, TArray<int32> Trophies_ID);
 
-	/* Get Trophies */
+	/**
+	 * Gets the trophy information from the fetched trophies
+	 * @return Array of FTrophyInfo structs for all fetched trophies
+	 */
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Get Trophies"), Category = "GameJolt|Trophies")
 	TArray<FTrophyInfo> GetTrophies();
 
 #pragma endregion
 
-
-	/* Score Stuff */
+#pragma region Scores
 
 	/* Fetch Scoreboard*/
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Fetch Scoreboard"), Category = "GameJolt|Scoreboard")
@@ -362,8 +417,9 @@ public:
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Get Scoreboard Table"), Category = "GameJolt|Scoreboard")
 	TArray<FScoreTableInfo>  GetScoreboardTable();
 
+#pragma endregion
 
-	/* Utility Functions */
+#pragma region Utility
 
 	/* Sends Request */
 	UFUNCTION(Blueprintcallable, meta = (Displayname = " Send Request"), Category = "GameJolt|Request|Advanced")
@@ -407,5 +463,7 @@ public:
 	/* Gets an array with post data with the specified key */
 	UFUNCTION(BlueprintPure, meta = (DisplayName = "Get Object Array Field", HidePin = "WorldContextObject", DefaultToSelf = "WorldContextObject"), Category = "GameJolt|Request|Advanced")
 	TArray<UUEGameJoltAPI*> GetObjectArray(UObject* WorldContextObject, const FString& key);
+
+#pragma endregion
 
 };
