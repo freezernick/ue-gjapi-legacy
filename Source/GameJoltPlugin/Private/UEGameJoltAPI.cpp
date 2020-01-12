@@ -165,6 +165,8 @@ void UUEGameJoltAPI::LogOffUser()
 {
 	m_LoggedIn = false;
 	bGuest = true;
+	UserName = "";
+	UserToken = "";
 }
 
 /* Opens a session */
