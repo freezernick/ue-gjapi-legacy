@@ -67,6 +67,7 @@ struct FUserInfo
 		FString status;
 };
 
+/* Contains all information about a trophy */
 USTRUCT(BlueprintType)
 struct FTrophyInfo
 {
@@ -86,6 +87,7 @@ struct FTrophyInfo
 		FString achieved;
 };
 
+/* Contains all information about an entry in a scoreboard */
 USTRUCT(BlueprintType)
 struct FScoreInfo
 {
@@ -108,6 +110,7 @@ struct FScoreInfo
 
 };
 
+/* Contains all information about a scoreboard */
 USTRUCT(BlueprintType)
 struct FScoreTableInfo
 {
@@ -124,7 +127,10 @@ struct FScoreTableInfo
 
 };
 
-
+/**
+ * Class to use the GameJoltAPI
+ * Is also internally used by an UUEGameJoltAPI instance as a carrier for response data
+*/
 UCLASS(BlueprintType, Blueprintable)
 class GAMEJOLTPLUGIN_API UUEGameJoltAPI : public UObject
 {
@@ -132,11 +138,22 @@ class GAMEJOLTPLUGIN_API UUEGameJoltAPI : public UObject
 
 private:
 
-	/* Internal bind method for the IHTTPRequest::OnProcessRequestCompleted() event */
+	/**
+	* Callback for IHttpRequest::OnProcessRequestComplete()
+	* @param Request HTTP request pointer
+	* @param Response Response pointer
+	* @param bWasSuccessful Whether the request was successful or not
+	*/
 	void OnReady(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
+	
 	/* Reset Data*/
 	void Reset();
 
+	/**
+	 * Creates a http-URL from the input
+	 * @param inputURL The string to create the URL from
+	 * @return An URL starting with http://
+	*/
 	static FString CreateURL(FString inputURL);
 
 	void WriteObject(TSharedRef<TJsonWriter<TCHAR>> writer, FString key, FJsonValue* value);
@@ -145,17 +162,22 @@ public:
 
 	UObject* contextObject;
 
+	/* Prevents crashes in Get-Functions */
 	UPROPERTY(Transient)
 	class UWorld* World;
 
+	/* Allows usage of the World-Property */
 	virtual class UWorld* GetWorld() const override;
 
+	/* Whether the user uses a guest profile */
 	UPROPERTY(BlueprintReadOnly, Category = "GameJolt|User")
 	bool bGuest;
 
+	/* The username of the guest profile */
 	UPROPERTY(BlueprintReadWrite, Category = "GameJolt|User")
 	FString Guest_username;
 
+	/* Whether the user is logged in or not */
 	UPROPERTY(BlueprintReadOnly, Category = "GameJolt|User")
 	bool m_LoggedIn;
 
@@ -326,11 +348,17 @@ public:
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Add Score to Scoreboard"), Category = "GameJolt|Scoreboard")
 	bool AddScore(FString UserScore, int32 UserScore_Sort, FString GuestUser, FString extra_data, int32 table_id);
 
-	/* Fetch Scoreboard Table*/
+	/**
+	 * Returns a list of high score tables for a game.
+	 * @return True if it the request succeded and false if it failed
+	 **/
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Fetch Scoreboard Table"), Category = "GameJolt|Scoreboard")
 	bool FetchScoreboardTable();
 
-	/* Gets Scoreboard Table */
+	/** 
+	 * Gets a list of high score tables for a game and puts them in an array of FScoreTableInfo structs
+	 * @return  A array of FScoreTableInfo structs
+	*/
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Get Scoreboard Table"), Category = "GameJolt|Scoreboard")
 	TArray<FScoreTableInfo>  GetScoreboardTable();
 
@@ -341,23 +369,38 @@ public:
 	UFUNCTION(Blueprintcallable, meta = (Displayname = " Send Request"), Category = "GameJolt|Request|Advanced")
 	bool SendRequest(const FString& output, FString url);
 
-	/* Fetches nested post data from the post data */
+	/** Gets nested post data from the object with the specified key
+	 * @param key The key of the post data value
+	 * @return The value as an UUEGameJoltAPI object reference / pointer
+	*/
 	UFUNCTION(BlueprintPure, meta = (DisplayName = "Get Data Field", HidePin = "WorldContextObject", DefaultToSelf = "WorldContextObject"), Category = "GameJolt|Request|Advanced")
 	UUEGameJoltAPI* GetObject(const FString& key);
 
-	/* Gets string data from the post data */
+	/** Gets a string from the object with the specified key
+	 * @param key The key of the string value
+	 * @return The value as a string
+	*/
 	UFUNCTION(BlueprintPure, meta = (DisplayName = "Get String Field"), Category = "GameJolt|Request|Advanced")
 	FString GetString(const FString& key) const;
 
-	/* Gets bool data from the post data */
+	/** Gets a bool from the object with the specified key
+	 * @param key The key of the bool value
+	 * @return The value as a bool
+	*/
 	UFUNCTION(BlueprintPure, meta = (DisplayName = "Get Bool Field"), Category = "GameJolt|Request|Advanced")
 	bool GetBool(const FString& key) const;
 
-	/* Gets int data from the post data */
+	/** Gets an integer from the object with the specified key
+	 * @param key The key of the integer value
+	 * @return The value as an integer
+	*/
 	UFUNCTION(BlueprintPure, meta = (DisplayName = "Get Int Field"), Category = "GameJolt|Request|Advanced")
 	int32 GetInt(const FString& key) const;
 
-	/* Get all keys from the object */
+	/**
+	 * Gets a string array of all keys from the post data
+	* @return An array with all keys
+	*/
 	UFUNCTION(Blueprintpure, meta = (Displayname = "Get Object Keys", HidePin = "WorldContextObject", DefaultToSelf = "WorldContextObject"), Category = "GameJolt|Request|Advanced")
 	TArray<FString> GetObjectKeys(UObject* WorldContextObject);
 

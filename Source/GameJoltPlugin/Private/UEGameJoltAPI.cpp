@@ -508,11 +508,7 @@ bool UUEGameJoltAPI::AddScore(FString UserScore, int32 UserScore_Sort, FString G
 	return true;
 }
 
-/* Returns a list of high score tables for a game.
-*
-*	@return	bool	True if it Succeed False if it fails
-*
-*/
+/* Fetches all scoreboard tables */
 bool UUEGameJoltAPI::FetchScoreboardTable()
 {
 	bool ret = true;
@@ -535,11 +531,7 @@ bool UUEGameJoltAPI::FetchScoreboardTable()
 }
 
 
-/* Geta list of high score tables for a game and put them in a Array of FScoreTableInfo.
-*
-*	@return	returnTableinfo	A array of Struct FScoreTableInfo
-*
-*/
+/* Creates an array of FScoreTableInfo structs for all scoreboards of the game */
 TArray<FScoreTableInfo> UUEGameJoltAPI::GetScoreboardTable()
 {
 	TArray<FScoreTableInfo> returnTableinfo;
@@ -557,15 +549,7 @@ TArray<FScoreTableInfo> UUEGameJoltAPI::GetScoreboardTable()
 	return returnTableinfo;
 }
 
-/**
-*Gets the post data object from the post data with the given key
-*
-* @param	WorldContextObject		Array of strings
-* @param	key						Key
-*
-* @return	The object itself
-*/
-
+/* Gets nested post data from the object with the specified key */
 UUEGameJoltAPI* UUEGameJoltAPI::GetObject(const FString& key)
 {
 	UUEGameJoltAPI* fieldObj = NULL;
@@ -585,6 +569,7 @@ UUEGameJoltAPI* UUEGameJoltAPI::GetObject(const FString& key)
 	return fieldObj;
 }
 
+/* Gets a string field */
 FString UUEGameJoltAPI::GetString(const FString& key) const
 {
 	FString outString;
@@ -596,6 +581,8 @@ FString UUEGameJoltAPI::GetString(const FString& key) const
 
 	return outString;
 }
+
+/* Gets a bool field */
 bool UUEGameJoltAPI::GetBool(const FString& key)const
 {
 	bool outBool;
@@ -606,6 +593,8 @@ bool UUEGameJoltAPI::GetBool(const FString& key)const
 	}
 	return outBool;
 }
+
+/* Gets an integer field */
 int32 UUEGameJoltAPI::GetInt(const FString& key) const
 {
 	int32 outInt;
@@ -617,13 +606,7 @@ int32 UUEGameJoltAPI::GetInt(const FString& key) const
 	return outInt;
 }
 
-/**
-* Gets a string array from the post data with the given key
-*
-* @param	key						Key
-*
-* @return	The requested array of strings
-*/
+/* Gets a string array of all keys from the post data */
 TArray<FString> UUEGameJoltAPI::GetObjectKeys(UObject* WorldContextObject)
 {
 	TArray<FString> stringArray;
@@ -737,6 +720,7 @@ void UUEGameJoltAPI::WriteObject(TSharedRef<TJsonWriter<TCHAR>> writer, FString 
 	}
 }
 
+/* Creates a http-URL from the input */
 FString UUEGameJoltAPI::CreateURL(FString inputURL) {
 	if (!inputURL.StartsWith("http")) {
 		return "http://" + inputURL;
@@ -767,14 +751,7 @@ void UUEGameJoltAPI::FromString(const FString& dataString) {
 }
 
 
-/**
-* Callback for IHttpRequest::OnProcessRequestComplete()
-*
-* @param	Request					HTTP request pointer
-* @param	Response				Response pointer
-* @param	bWasSuccessful			Whether the request was successful or not
-*
-*/
+/* Callback for IHttpRequest::OnProcessRequestComplete() */
 void UUEGameJoltAPI::OnReady(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful) {
 	if (!bWasSuccessful) {
 		UE_LOG(GJAPI, Warning, TEXT("Response was invalid! Please check the URL."));
@@ -789,6 +766,8 @@ void UUEGameJoltAPI::OnReady(FHttpRequestPtr Request, FHttpResponsePtr Response,
 	// Broadcast the result event
 	OnGetResult.Broadcast();
 }
+
+/* Resets the saved data */
 void UUEGameJoltAPI::Reset()
 {
 	if (Data.IsValid()){
