@@ -169,17 +169,13 @@ public:
 	/* Allows usage of the World-Property */
 	virtual class UWorld* GetWorld() const override;
 
-	/* Whether the user uses a guest profile */
-	UPROPERTY(BlueprintReadOnly, Category = "GameJolt|User")
-	bool bGuest;
-
 	/* The username of the guest profile */
 	UPROPERTY(BlueprintReadWrite, Category = "GameJolt|User")
 	FString Guest_username;
 
-	/* Whether the user is logged in or not */
+	/* Whether a user is currently logged in. Treated as a guest if false */
 	UPROPERTY(BlueprintReadOnly, Category = "GameJolt|User")
-	bool m_LoggedIn;
+	bool bIsLoggedIn;
 
 	/* An enum representing the last request send. Local 'Get' nodes don't count */
 	UPROPERTY(BlueprintReadWrite, Category = "GameJolt")

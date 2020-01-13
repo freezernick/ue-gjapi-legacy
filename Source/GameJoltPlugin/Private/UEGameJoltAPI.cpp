@@ -14,8 +14,7 @@
 UUEGameJoltAPI::UUEGameJoltAPI(const class FObjectInitializer& PCIP) : Super(PCIP)
 {
 	Reset();
-	m_LoggedIn = false;
-	bGuest = true;
+	bIsLoggedIn = false;
 	GJAPI_SERVER = "api.gamejolt.com";
 	GJAPI_ROOT = "/api/game/";
 	GJAPI_VERSION = "v1_2";
@@ -129,14 +128,12 @@ bool UUEGameJoltAPI::isUserAuthorize()
 	outAuthorize = responseField->GetBool("success");
 	if (!outAuthorize)
 	{
-		m_LoggedIn = false;
-		bGuest = true;
+		bIsLoggedIn = false;
 		UE_LOG(GJAPI, Error, TEXT("Couldn't authenticate user. Message: %s"), *responseField->GetString("message"));
 		return false;
 	}
 
-	m_LoggedIn = true;
-	bGuest = false;
+	bIsLoggedIn = true;
 	return true;
 }
 
@@ -160,8 +157,7 @@ bool UUEGameJoltAPI::FetchUser()
 /* Resets user related properties */
 void UUEGameJoltAPI::LogOffUser()
 {
-	m_LoggedIn = false;
-	bGuest = true;
+	bIsLoggedIn = false;
 	UserName = "";
 	UserToken = "";
 }
@@ -234,7 +230,7 @@ bool UUEGameJoltAPI::RewardTrophy(int32 Trophy_ID)
 	FString GameIDString;
 	FString TrophyIDString;
 	GameIDString = FString::FromInt(Game_ID);
-	if (bGuest)
+	if (!bIsLoggedIn)
 	{
 		UE_LOG(GJAPI, Error, TEXT("User is not logged in"));
 		return false;
@@ -267,7 +263,7 @@ void UUEGameJoltAPI::FetchTrophies(EGameJoltAchievedTrophies AchievedType, TArra
 	FString TrophyIDString;
 	FString AchievedString;
 
-	if (!m_LoggedIn)
+	if (!bIsLoggedIn)
 	{
 		UE_LOG(GJAPI, Error, TEXT("User is not logged in!"));
 		return;
@@ -354,8 +350,8 @@ bool UUEGameJoltAPI::FetchScoreboard(int32 ScoreLimit, int32 Table_id)
 	LastActionPerformed = EGameJoltComponentEnum::GJ_SCORES_FETCH;
 
 	ret = SendRequest(output, TEXT("/scores/?format=json&game_id=") + GameIDString +
-		(!UserName.IsEmpty() || bGuest ? "&username=" : "") + UserName +
-		(m_LoggedIn ? "&user_token=" : "") + UserToken +
+		(!UserName.IsEmpty() || !bIsLoggedIn ? "&username=" : "") + UserName +
+		(bIsLoggedIn ? "&user_token=" : "") + UserToken +
 		(ScoreLimit > 0 ? "&limit=" : "") + (ScoreLimit > 0 ? ScoreLimitString : "") +
 		(Table_id > 0 ? "&table_id=" : "") + (Table_id > 0 ? TableIDString : ""));
 
@@ -403,9 +399,9 @@ bool UUEGameJoltAPI::AddScore(FString UserScore, int32 UserScore_Sort, FString G
 	ret = SendRequest(output, TEXT("/scores/add/?format=json&game_id=") + GameIDString +
 		TEXT("&score=") + UserScore +
 		TEXT("&sort=") + FString::FromInt(UserScore_Sort) +
-		(!UserName.IsEmpty() || m_LoggedIn ? "&username=" : "") + UserName +
-		(!bGuest ? "&user_token=" : "") + UserToken +
-		(bGuest ? "&guest=" : "") + GuestUser +
+		(!UserName.IsEmpty() || bIsLoggedIn ? "&username=" : "") + UserName +
+		(bIsLoggedIn ? "&user_token=" : "") + UserToken +
+		(!bIsLoggedIn ? "&guest=" : "") + GuestUser +
 		(!extra_data.IsEmpty() ? "&extra_data=" : "") + extra_data +
 		(table_id > 0 ? "&table_id=" : "") + (table_id > 0 ? TableIDString : ""));
 	if (!ret)
