@@ -1,5 +1,3 @@
-// Copyright (c) 2019 Free2Play-Entertainment
-
 #include "UEGameJoltAPI.h"
 #include "Engine/Engine.h"
 #include "HttpModule.h"

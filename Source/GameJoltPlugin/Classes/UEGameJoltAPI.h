@@ -1,6 +1,5 @@
-// Copyright (c) 2019 Free2Play-Entertainment
-
 #pragma once
+
 #include "CoreMinimal.h"
 #include "Interfaces/IHttpRequest.h"
 #include "Serialization/JsonSerializer.h"

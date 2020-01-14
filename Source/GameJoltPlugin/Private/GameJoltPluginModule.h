@@ -1,6 +1,5 @@
-// Copyright (c) 2019 Free2Play-Entertainment
-
 #pragma once
+
 #include "CoreMinimal.h"
 #include "Modules/ModuleManager.h"
 
