@@ -332,6 +332,14 @@ TArray<FTrophyInfo> UUEGameJoltAPI::GetTrophies()
 		return returnTrophy;
 }
 
+/* Unachieves a trophy */
+bool UUEGameJoltAPI::RemoveRewardedTrophy(int32 Trophy_ID)
+{
+	FString output;
+	LastActionPerformed = EGameJoltComponentEnum::GJ_TROHIES_REMOVE;
+	return SendRequest(output, TEXT("/trophies/remove-achieved/?format=json&game_id=") + FString::FromInt(Game_ID) + "&username=" + UserName + "&user_token=" + UserToken + "&trophy_id=" + FString::FromInt(Trophy_ID));
+}
+
 /* Returns a list of scores either for a user or globally for a game */
 bool UUEGameJoltAPI::FetchScoreboard(int32 ScoreLimit, int32 Table_id)
 {
