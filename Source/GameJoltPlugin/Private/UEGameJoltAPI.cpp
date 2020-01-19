@@ -343,7 +343,13 @@ bool UUEGameJoltAPI::RemoveRewardedTrophy(int32 Trophy_ID)
 /* Checks if the trophy removel was successful */
 bool UUEGameJoltAPI::GetTrophyRemovalStatus()
 {
-	return GetObject("response")->GetBool("success");
+	UUEGameJoltAPI* Response = GetObject("response"); 
+	if(!Response)
+	{
+		UE_LOG(GJAPI, Error, TEXT("Response invalid in GetTrophyRemovalStatus. Was ist called to early?"));
+		return false;
+	}
+	return Response->GetBool("success");
 }
 
 /* Returns a list of scores either for a user or globally for a game */
