@@ -332,6 +332,26 @@ TArray<FTrophyInfo> UUEGameJoltAPI::GetTrophies()
 		return returnTrophy;
 }
 
+/* Unachieves a trophy */
+bool UUEGameJoltAPI::RemoveRewardedTrophy(int32 Trophy_ID)
+{
+	FString output;
+	LastActionPerformed = EGameJoltComponentEnum::GJ_TROHIES_REMOVE;
+	return SendRequest(output, TEXT("/trophies/remove-achieved/?format=json&game_id=") + FString::FromInt(Game_ID) + "&username=" + UserName + "&user_token=" + UserToken + "&trophy_id=" + FString::FromInt(Trophy_ID));
+}
+
+/* Checks if the trophy removel was successful */
+bool UUEGameJoltAPI::GetTrophyRemovalStatus()
+{
+	UUEGameJoltAPI* Response = GetObject("response"); 
+	if(!Response)
+	{
+		UE_LOG(GJAPI, Error, TEXT("Response invalid in GetTrophyRemovalStatus. Was ist called to early?"));
+		return false;
+	}
+	return Response->GetBool("success");
+}
+
 /* Returns a list of scores either for a user or globally for a game */
 bool UUEGameJoltAPI::FetchScoreboard(int32 ScoreLimit, int32 Table_id)
 {

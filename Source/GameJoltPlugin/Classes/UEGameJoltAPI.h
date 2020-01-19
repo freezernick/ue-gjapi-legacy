@@ -24,6 +24,7 @@ enum class EGameJoltComponentEnum : uint8
 	GJ_SESSION_CLOSE 	UMETA(DisplayName = "Close Session"),
 	GJ_TROPHIES_FETCH 	UMETA(DisplayName = "Fetch Trophies"),
 	GJ_TROPHIES_ADD 	UMETA(DisplayName = "Add Achieved Trophies"),
+	GJ_TROHIES_REMOVE	UMETA(DisplayName = "Remove Rewarded Trophy"),
 	GJ_SCORES_FETCH 	UMETA(DisplayName = "Fetch Score"),
 	GJ_SCORES_ADD 		UMETA(DisplayName = "Add Score"),
 	GJ_SCORES_TABLE 	UMETA(DisplayName = "Get Score Tables"),
@@ -377,6 +378,21 @@ public:
 	 */
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Get Trophies"), Category = "GameJolt|Trophies")
 	TArray<FTrophyInfo> GetTrophies();
+
+	/**
+	 * Unachieved the specified trophy for the curernt user
+	 * @param Trophy_ID The ID of the trophy to be unachieved
+	 * @return Whether the request could be send or not
+	 */
+	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Remove Rewarded Trophy"), Category = "GameJolt|Trophies")
+	bool RemoveRewardedTrophy(int32 Trophy_ID);
+
+	/**
+	 * Checks the success of a trophy removal
+	 * @return Whether the trophy was successfuly remove or not
+	 */
+	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Check Trophy Removel Status"), Category = "GameJolt|Trophies")
+	bool GetTrophyRemovalStatus();
 
 #pragma endregion
 
