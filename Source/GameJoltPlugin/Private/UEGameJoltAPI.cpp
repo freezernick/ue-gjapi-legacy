@@ -340,6 +340,12 @@ bool UUEGameJoltAPI::RemoveRewardedTrophy(int32 Trophy_ID)
 	return SendRequest(output, TEXT("/trophies/remove-achieved/?format=json&game_id=") + FString::FromInt(Game_ID) + "&username=" + UserName + "&user_token=" + UserToken + "&trophy_id=" + FString::FromInt(Trophy_ID));
 }
 
+/* Checks if the trophy removel was successful */
+bool UUEGameJoltAPI::GetTrophyRemovalStatus()
+{
+	return GetObject("response")->GetBool("success");
+}
+
 /* Returns a list of scores either for a user or globally for a game */
 bool UUEGameJoltAPI::FetchScoreboard(int32 ScoreLimit, int32 Table_id)
 {

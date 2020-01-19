@@ -387,6 +387,13 @@ public:
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Remove Rewarded Trophy"), Category = "GameJolt|Trophies")
 	bool RemoveRewardedTrophy(int32 Trophy_ID);
 
+	/**
+	 * Checks the success of a trophy removal
+	 * @return Whether the trophy was successfuly remove or not
+	 */
+	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Check Trophy Removel Status"), Category = "GameJolt|Trophies")
+	bool GetTrophyRemovalStatus();
+
 #pragma endregion
 
 #pragma region Scores
