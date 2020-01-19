@@ -194,6 +194,26 @@ bool UUEGameJoltAPI::CloseSession()
 		TEXT("&user_token=") + UserToken);
 }
 
+/* Fetches the session status */
+bool UUEGameJoltAPI::CheckSession()
+{
+	FString output;
+	LastActionPerformed = EGameJoltComponentEnum::GJ_SESSION_CHECK;
+	return SendRequest(output, TEXT("/sessions/check/?format=json&game_id=") + FString::FromInt(Game_ID) + "&username=" + UserName + "&user_token=" + UserToken);
+}
+
+/* Gets the session status */
+bool UUEGameJoltAPI::GetSessionStatus()
+{
+	UUEGameJoltAPI* Response = GetObject("response");
+	if(!Response)
+	{
+		UE_LOG(GJAPI, Error, TEXT("Response invalid in GetSessionStatus. Was ist called to early?"));
+		return false;
+	}
+	return Response->GetBool("success");
+}
+
 /* Gets an array of users and puts them in an array of FUserInfo structs */
 TArray<FUserInfo>  UUEGameJoltAPI::FetchArrayUsers()
 {
