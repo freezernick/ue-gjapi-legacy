@@ -351,7 +351,7 @@ public:
 	 * Gets information about the current user
 	 * @return True if it the request succeded and false if it failed
 	 **/
-	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Fetch Users"), Category = "GameJolt|User")
+	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Fetch Current User Info"), Category = "GameJolt|User")
 	bool FetchUser();
 
 	/**
