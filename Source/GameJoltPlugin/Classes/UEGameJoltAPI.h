@@ -369,6 +369,21 @@ public:
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Get Array of Users"), Category = "GameJolt|User")
 	TArray<FUserInfo> FetchArrayUsers();
 
+	/**
+	 * Fetches the friendlist of the current user
+	 * @return True if the request could be send, false if not
+	 */
+	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Fetch Friendlist"), Category = "GameJolt|User")
+	bool FetchFriendlist();
+
+	/**
+	 * Returns the fetched friendlist
+	 * @warning Call FetchFriendlist first
+	 * @return The user ids of all friends
+	 */
+	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Get Friendlist"), Category = "GameJolt|User")
+	TArray<int32> GetFriendlist();
+
 #pragma endregion
 
 #pragma region Trophies

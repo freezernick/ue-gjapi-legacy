@@ -165,6 +165,26 @@ bool UUEGameJoltAPI::FetchUsers(TArray<int32> Users)
 	return SendRequest(output, TEXT("/users/?format=json&game_id=") + FString::FromInt(Game_ID) + "&user_id=" + UserIDs);
 }
 
+/* Fetches the friendlist of the current user */
+bool UUEGameJoltAPI::FetchFriendlist()
+{
+	FString output;
+	LastActionPerformed = EGameJoltComponentEnum::GJ_USER_FRIENDLIST;
+	return SendRequest(output, "/friends/?format=json&game_id=" + FString::FromInt(Game_ID) + "&username=" + UserName + "&user_token=" + UserToken);
+}
+
+/* Gets the friendlist */
+TArray<int32> UUEGameJoltAPI::GetFriendlist()
+{
+	TArray<UUEGameJoltAPI*> returnArray = GetObject("response")->GetObjectArray(GetObject("response"), "friends");
+	TArray<int32> returnIDs;
+	for(int i = 0; i < returnArray.Num(); i++)
+	{
+		returnIDs.Add(returnArray[i]->GetInt("friend_id"));
+	}
+	return returnIDs;
+}
+
 /* Resets user related properties */
 void UUEGameJoltAPI::LogOffUser()
 {
