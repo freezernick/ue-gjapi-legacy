@@ -12,7 +12,9 @@ UENUM(BlueprintType)
 enum class EGameJoltComponentEnum : uint8
 {
 	GJ_USER_AUTH		UMETA(DisplayName = "Authorize User"),
-	GJ_USER_FETCH		UMETA(DisplayName = "Fetch User"),
+	GJ_USER_FETCH		UMETA(DisplayName = "Fetch Current User"),
+	GJ_USERS_FETCH		UMETA(DisplayName = "Fetch Users"),
+	GJ_USER_FRIENDLIST	UMETA(DisplayName = "Fetch Friendlist"),
 	GJ_SESSION_OPEN	    UMETA(DisplayName = "Open Session"),
 	GJ_SESSION_PING 	UMETA(DisplayName = "Ping Session"),
 	GJ_SESSION_CLOSE 	UMETA(DisplayName = "Close Session"),
@@ -408,8 +410,16 @@ public:
 	 * Gets information about the current user
 	 * @return True if it the request succeded and false if it failed
 	 **/
-	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Fetch Users"), Category = "GameJolt|User")
+	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Fetch Current User Info"), Category = "GameJolt|User")
 	bool FetchUser();
+
+	/**
+	 * Fetches an array of users
+	 * @param Users An array (int32) representing the user ids
+	 * @return True if the request succeded, false if not
+	 */
+	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Fetch Users"), Category = "GameJolt|User")
+	bool FetchUsers(TArray<int32> Users);
 
 	/**
 	 * Gets an array of users and puts them in an array of FUserInfo structs
@@ -417,6 +427,21 @@ public:
 	*/
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Get Array of Users"), Category = "GameJolt|User")
 	TArray<FUserInfo> FetchArrayUsers();
+
+	/**
+	 * Fetches the friendlist of the current user
+	 * @return True if the request could be send, false if not
+	 */
+	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Fetch Friendlist"), Category = "GameJolt|User")
+	bool FetchFriendlist();
+
+	/**
+	 * Returns the fetched friendlist
+	 * @warning Call FetchFriendlist first
+	 * @return The user ids of all friends
+	 */
+	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Get Friendlist"), Category = "GameJolt|User")
+	TArray<int32> GetFriendlist();
 
 #pragma endregion
 
