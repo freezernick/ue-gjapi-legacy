@@ -152,6 +152,19 @@ bool UUEGameJoltAPI::FetchUser()
 	return true;
 }
 
+/* Fetches an array of users */
+bool UUEGameJoltAPI::FetchUsers(TArray<int32> Users)
+{
+	FString output;
+	LastActionPerformed = EGameJoltComponentEnum::GJ_USERS_FETCH;
+	FString UserIDs = "";
+	for(const int32 UserID : Users)
+	{
+		UserIDs.Append(FString::FromInt(UserID) + ",");
+	}
+	return SendRequest(output, TEXT("/users/?format=json&game_id=") + FString::FromInt(Game_ID) + "&user_id=" + UserIDs);
+}
+
 /* Resets user related properties */
 void UUEGameJoltAPI::LogOffUser()
 {

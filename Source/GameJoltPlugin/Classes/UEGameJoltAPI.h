@@ -355,6 +355,14 @@ public:
 	bool FetchUser();
 
 	/**
+	 * Fetches an array of users
+	 * @param Users An array (int32) representing the user ids
+	 * @return True if the request succeded, false if not
+	 */
+	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Fetch Users"), Category = "GameJolt|User")
+	bool FetchUsers(TArray<int32> Users);
+
+	/**
 	 * Gets an array of users and puts them in an array of FUserInfo structs
 	 * @return An array with the FUserInfo structs
 	*/
