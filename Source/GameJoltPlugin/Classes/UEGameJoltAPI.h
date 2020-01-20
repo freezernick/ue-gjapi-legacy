@@ -19,6 +19,7 @@ enum class EGameJoltComponentEnum : uint8
 {
 	GJ_USER_AUTH		UMETA(DisplayName = "Authorize User"),
 	GJ_USER_FETCH		UMETA(DisplayName = "Fetch User"),
+	GJ_USER_FRIENDLIST	UMETA(DisplayName = "Fetch Friendlist"),
 	GJ_SESSION_OPEN	    UMETA(DisplayName = "Open Session"),
 	GJ_SESSION_PING 	UMETA(DisplayName = "Ping Session"),
 	GJ_SESSION_CLOSE 	UMETA(DisplayName = "Close Session"),
