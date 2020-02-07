@@ -742,7 +742,7 @@ void UUEGameJoltAPI::OnReady(FHttpRequestPtr Request, FHttpResponsePtr Response,
 	switch(LastActionPerformed)
 	{
 		case EGameJoltComponentEnum::GJ_USER_AUTH:
-			OnUserAuthorized.Broadcast(true, isUserAuthorize());
+			OnUserAuthorized.Broadcast(isUserAuthorize());
 			break;
 		case EGameJoltComponentEnum::GJ_USER_FETCH:
 			OnUserFetched.Broadcast(GetUserInfo()[0]);
