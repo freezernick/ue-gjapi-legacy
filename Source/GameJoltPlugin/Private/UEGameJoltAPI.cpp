@@ -247,8 +247,14 @@ bool UUEGameJoltAPI::GetSessionStatus()
 	return Response->GetBool("success");
 }
 
-/* Gets an array of users and puts them in an array of FUserInfo structs */
+/* Deprecated - 1.8 */
 TArray<FUserInfo>  UUEGameJoltAPI::FetchArrayUsers()
+{
+	return GetUserInfo();
+}
+
+/* Gets an array of users and puts them in an array of FUserInfo structs */
+TArray<FUserInfo> UUEGameJoltAPI::GetUserInfo()
 {
 	TArray<UUEGameJoltAPI*> returnArray = GetObject("response")->GetObjectArray(GetObject("response"), "users");
 
