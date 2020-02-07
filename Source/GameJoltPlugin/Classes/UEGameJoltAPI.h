@@ -135,11 +135,11 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnFailed);
 /* Authorize User */
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnUserAuthorized, bool, bIsLoggedIn);
 /* Get Current User Info */
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnUserFetched, FUserInfo, Current User Info);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnUserFetched, FUserInfo, CurrentUserInfo);
 /* Get User Info*/
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnUsersFetched, TArray<FUserInfo>, User Info);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnUsersFetched, TArray<FUserInfo>, UserInfo);
 /* Get Friendlist */
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParem(FOnFriendlistFetched, TArray<int32>, Friendlist);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnFriendlistFetched, TArray<int32>, Friendlist);
 /* Open Session */
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSessionOpened, bool, bIsSessionOpen);
 /* Ping Session */
