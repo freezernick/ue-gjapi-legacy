@@ -134,16 +134,26 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnFailed);
 
 /* Authorize User */
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnUserAuthorized, bool, bIsLoggedIn);
+/* Get Current User Info */
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnUserFetched, FUserInfo, Current User Info);
+/* Get User Info*/
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnUsersFetched, TArray<FUserInfo>, User Info);
+/* Get Friendlist */
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParem(FOnFriendlistFetched, TArray<int32>, Friendlist);
 /* Open Session */
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSessionOpened, bool, bIsSessionOpen);
 /* Ping Session */
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSessionPinged, bool, bIsSessionStillOpen);
 /* Close Session */
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSessionClosed, bool, bIsSessionClosed);
+/* Check Session */
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSessionChecked, bool, bIsSessionStillOpen);
 /* Fetch Trophies */
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnTrophiesFetched, bool, bWasSuccessful, TArray<FTrophyInfo>, Trophies);
 /* Reward Trophy */
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTrophyAwarded, bool, bWasTrophyAwarded);
+/* Remove Trophy */
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTrophyRemoved, bool, bWasRemoved);
 /* Fetch Scoreboard */
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnScoreboardFetched, bool, bWasFetched, TArray<FScoreInfo>, Scores);
 /* Add Score */
@@ -230,6 +240,15 @@ public:
 	FOnUserAuthorized OnUserAuthorized;
 
 	UPROPERTY(BlueprintAssignable, Category = "GameJolt|Events|Specific")
+	FOnUserFetched OnUserFetched;
+
+	UPROPERTY(BlueprintAssignable, Category = "GameJolt|Events|Specific")
+	FOnUsersFetched OnUsersFetched;
+
+	UPROPERTY(BlueprintAssignable, Category = "GameJolt|Events|Specific")
+	FOnFriendlistFetched OnFriendlistFetched;
+
+	UPROPERTY(BlueprintAssignable, Category = "GameJolt|Events|Specific")
 	FOnSessionOpened OnSessionOpened;
 
 	UPROPERTY(BlueprintAssignable, Category = "GameJolt|Events|Specific")
@@ -239,10 +258,16 @@ public:
 	FOnSessionClosed OnSessionClosed;
 
 	UPROPERTY(BlueprintAssignable, Category = "GameJolt|Events|Specific")
+	FOnSessionChecked OnSessionChecked;
+
+	UPROPERTY(BlueprintAssignable, Category = "GameJolt|Events|Specific")
 	FOnTrophiesFetched OnTrophiesFetched;
 
 	UPROPERTY(BlueprintAssignable, Category = "GameJolt|Events|Specific")
 	FOnTrophyAwarded OnTrophyAwarded;
+
+	UPROPERTY(BlueprintAssignable, Category = "GameJolt|Events|Specific")
+	FOnTrophyRemoved OnTrophyRemoved;
 
 	UPROPERTY(BlueprintAssignable, Category = "GameJolt|Events|Specific")
 	FOnScoreboardFetched OnScoreboardFetched;

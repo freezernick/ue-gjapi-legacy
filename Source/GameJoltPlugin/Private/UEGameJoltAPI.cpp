@@ -652,7 +652,6 @@ bool UUEGameJoltAPI::SendRequest(const FString& output, FString url)
 	HttpRequest->SetURL(CreateURL(url));
 	HttpRequest->SetHeader("Content-Type", "application/json");
 	HttpRequest->SetContentAsString(output);
-
 	HttpRequest->OnProcessRequestComplete().BindUObject(this, &UUEGameJoltAPI::OnReady);
 	HttpRequest->ProcessRequest();
 	
@@ -739,6 +738,55 @@ void UUEGameJoltAPI::OnReady(FHttpRequestPtr Request, FHttpResponsePtr Response,
 
 	// Process the string
 	FromString(Response->GetContentAsString());
+
+	switch(LastActionPerformed)
+	{
+		case EGameJoltComponentEnum::GJ_USER_AUTH:
+			OnUserAuthorized.Broadcast(true, isUserAuthorize());
+			break;
+		case EGameJoltComponentEnum::GJ_USER_FETCH:
+			OnUserFetched.Broadcast(GetUserInfo()[0]);
+			break;
+		case EGameJoltComponentEnum::GJ_USERS_FETCH:
+			OnUsersFetched.Broadcast(GetUserInfo());
+			break;
+		case EGameJoltComponentEnum::GJ_USER_FRIENDLIST:
+			OnFriendlistFetched.Broadcast(GetFriendlist());
+			break;
+		case EGameJoltComponentEnum::GJ_SESSION_OPEN:
+			OnSessionOpened.Broadcast(true);
+			break;
+		case EGameJoltComponentEnum::GJ_SESSION_PING:
+			OnSessionPinged.Broadcast(true);
+			break;
+		case EGameJoltComponentEnum::GJ_SESSION_CLOSE:
+			OnSessionClosed.Broadcast(true);
+			break;
+		case EGameJoltComponentEnum::GJ_SESSION_CHECK:
+			OnSessionChecked.Broadcast(GetSessionStatus());
+			break;
+		case EGameJoltComponentEnum::GJ_TROPHIES_FETCH:
+			OnTrophiesFetched.Broadcast(true, GetTrophies());
+			break;
+		case EGameJoltComponentEnum::GJ_TROPHIES_ADD:
+			OnTrophyAwarded.Broadcast(true);
+			break;
+		case EGameJoltComponentEnum::GJ_TROHIES_REMOVE:
+			OnTrophyRemoved.Broadcast(GetTrophyRemovalStatus());
+			break;
+		case EGameJoltComponentEnum::GJ_SCORES_FETCH:
+			OnScoreboardFetched(true, GetScoreboard());
+			break;
+		case EGameJoltComponentEnum::GJ_SCORES_ADD:
+
+			break;
+		case EGameJoltComponentEnum::GJ_SCORES_TABLE:
+			OnScoreboardTableFetched(true, GetScoreboardTable());
+			break;
+		case EGameJoltComponentEnum::GJ_TIME:
+			OnTimeFetched.Broadcast(true, ReadServerTime());
+			break;
+	}
 	// Broadcast the result event
 	OnGetResult.Broadcast();
 }
