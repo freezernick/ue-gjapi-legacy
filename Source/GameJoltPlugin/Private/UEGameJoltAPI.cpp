@@ -775,13 +775,13 @@ void UUEGameJoltAPI::OnReady(FHttpRequestPtr Request, FHttpResponsePtr Response,
 			OnTrophyRemoved.Broadcast(GetTrophyRemovalStatus());
 			break;
 		case EGameJoltComponentEnum::GJ_SCORES_FETCH:
-			OnScoreboardFetched(true, GetScoreboard());
+			OnScoreboardFetched.Broadcast(true, GetScoreboard());
 			break;
 		case EGameJoltComponentEnum::GJ_SCORES_ADD:
 
 			break;
 		case EGameJoltComponentEnum::GJ_SCORES_TABLE:
-			OnScoreboardTableFetched(true, GetScoreboardTable());
+			OnScoreboardTableFetched.Broadcast(true, GetScoreboardTable());
 			break;
 		case EGameJoltComponentEnum::GJ_TIME:
 			OnTimeFetched.Broadcast(true, ReadServerTime());
