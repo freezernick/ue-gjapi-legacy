@@ -424,9 +424,17 @@ public:
 	/**
 	 * Gets an array of users and puts them in an array of FUserInfo structs
 	 * @return An array with the FUserInfo structs
+	 * @deprecated Will be removed in 1.8. Use GetUserInfo() instead
 	*/
-	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Get Array of Users"), Category = "GameJolt|User")
+	UFUNCTION(BlueprintCallable, meta = (DeprecatedFunction, DeprecationMessage = "Will be removed in 1.8. Use GetUserInfo instead", DisplayName = "Get Array of Users"), Category = "GameJolt|User")
 	TArray<FUserInfo> FetchArrayUsers();
+
+	/**
+	 * Gets a single or an array of users and puts them in an array of FUserInfo structs
+	 * @return An array with the FUserInfo structs
+	 */
+	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Get User Info"), Category = "GameJolt|User")
+	TArray<FUserInfo> GetUserInfo();
 
 	/**
 	 * Fetches the friendlist of the current user
