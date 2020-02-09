@@ -7,12 +7,6 @@
 #include "Dom/JsonValue.h"
 #include "UEGameJoltAPI.generated.h"
 
-/* Generates a delegate for the OnGetResult event */
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnGetResult);
-
-/* Generates a delegate for the OnFailed event */
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnFailed);
-
 /* Represents all possible requests */
 UENUM(BlueprintType)
 enum class EGameJoltComponentEnum : uint8
@@ -130,6 +124,43 @@ struct FScoreTableInfo
 
 };
 
+/* Generates a delegate for the OnGetResult event */
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnGetResult);
+
+/* Generates a delegate for the OnFailed event */
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnFailed);
+
+#pragma region Specific Delegate Declaration
+
+/* Authorize User */
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnUserAuthorized, bool, bIsLoggedIn);
+/* Get Current User Info */
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnUserFetched, FUserInfo, CurrentUserInfo);
+/* Get User Info*/
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnUsersFetched, const TArray<FUserInfo>&, UserInfo);
+/* Get Friendlist */
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnFriendlistFetched, const TArray<int32>&, Friendlist);
+/* Open Session */
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSessionOpened, bool, bIsSessionOpen);
+/* Ping Session */
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSessionPinged, bool, bIsSessionStillOpen);
+/* Close Session */
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSessionClosed, bool, bIsSessionClosed);
+/* Check Session */
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSessionChecked, bool, bIsSessionStillOpen);
+/* Fetch Trophies */
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTrophiesFetched, TArray<FTrophyInfo>, Trophies);
+/* Remove Trophy */
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTrophyRemoved, bool, bWasRemoved);
+/* Fetch Scoreboard */
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnScoreboardFetched, TArray<FScoreInfo>, Scores);
+/* Fetch Scoreboard Table */
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnScoreboardTableFetched, TArray<FScoreTableInfo>, ScoreboardTable);
+/* Fetch Time */
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTimeFetched, struct FDateTime, ServerTime);
+
+#pragma endregion
+
 /**
  * Class to use the GameJoltAPI
  * Is also internally used by an UUEGameJoltAPI instance as a carrier for response data
@@ -192,12 +223,55 @@ public:
 	FString Content;
 
 	/* Event which triggers when the content has been retrieved */
-	UPROPERTY(BlueprintAssignable, Category = "GameJolt")
+	UPROPERTY(BlueprintAssignable, Category = "GameJolt|Events")
 	FOnGetResult OnGetResult;
 
 	/* Event which triggers when the request failed */
-	UPROPERTY(BlueprintAssignable, Category = "GameJolt")
+	UPROPERTY(BlueprintAssignable, Category = "GameJolt|Events")
 	FOnFailed OnFailed;
+
+#pragma region Specific Events
+
+	UPROPERTY(BlueprintAssignable, Category = "GameJolt|Events|Specific")
+	FOnUserAuthorized OnUserAuthorized;
+
+	UPROPERTY(BlueprintAssignable, Category = "GameJolt|Events|Specific")
+	FOnUserFetched OnUserFetched;
+
+	UPROPERTY(BlueprintAssignable, Category = "GameJolt|Events|Specific")
+	FOnUsersFetched OnUsersFetched;
+
+	UPROPERTY(BlueprintAssignable, Category = "GameJolt|Events|Specific")
+	FOnFriendlistFetched OnFriendlistFetched;
+
+	UPROPERTY(BlueprintAssignable, Category = "GameJolt|Events|Specific")
+	FOnSessionOpened OnSessionOpened;
+
+	UPROPERTY(BlueprintAssignable, Category = "GameJolt|Events|Specific")
+	FOnSessionPinged OnSessionPinged;
+
+	UPROPERTY(BlueprintAssignable, Category = "GameJolt|Events|Specific")
+	FOnSessionClosed OnSessionClosed;
+
+	UPROPERTY(BlueprintAssignable, Category = "GameJolt|Events|Specific")
+	FOnSessionChecked OnSessionChecked;
+
+	UPROPERTY(BlueprintAssignable, Category = "GameJolt|Events|Specific")
+	FOnTrophiesFetched OnTrophiesFetched;
+
+	UPROPERTY(BlueprintAssignable, Category = "GameJolt|Events|Specific")
+	FOnTrophyRemoved OnTrophyRemoved;
+
+	UPROPERTY(BlueprintAssignable, Category = "GameJolt|Events|Specific")
+	FOnScoreboardFetched OnScoreboardFetched;
+
+	UPROPERTY(BlueprintAssignable, Category = "GameJolt|Events|Specific")
+	FOnScoreboardTableFetched OnScoreboardTableFetched;
+
+	UPROPERTY(BlueprintAssignable, Category = "GameJolt|Events|Specific")
+	FOnTimeFetched OnTimeFetched;
+
+#pragma endregion
 
 	/* Creates new data from the input string */
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "From String"), Category = "GameJolt|Request")
