@@ -754,13 +754,13 @@ void UUEGameJoltAPI::OnReady(FHttpRequestPtr Request, FHttpResponsePtr Response,
 			OnFriendlistFetched.Broadcast(GetFriendlist());
 			break;
 		case EGameJoltComponentEnum::GJ_SESSION_OPEN:
-			OnSessionOpened.Broadcast(true);
+			OnSessionOpened.Broadcast(GetSessionStatus());
 			break;
 		case EGameJoltComponentEnum::GJ_SESSION_PING:
-			OnSessionPinged.Broadcast(true);
+			OnSessionPinged.Broadcast(GetSessionStatus());
 			break;
 		case EGameJoltComponentEnum::GJ_SESSION_CLOSE:
-			OnSessionClosed.Broadcast(true);
+			OnSessionClosed.Broadcast(GetSessionStatus());
 			break;
 		case EGameJoltComponentEnum::GJ_SESSION_CHECK:
 			OnSessionChecked.Broadcast(GetSessionStatus());
