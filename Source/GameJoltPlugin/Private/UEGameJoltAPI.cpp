@@ -768,17 +768,11 @@ void UUEGameJoltAPI::OnReady(FHttpRequestPtr Request, FHttpResponsePtr Response,
 		case EGameJoltComponentEnum::GJ_TROPHIES_FETCH:
 			OnTrophiesFetched.Broadcast(GetTrophies());
 			break;
-		case EGameJoltComponentEnum::GJ_TROPHIES_ADD:
-			OnTrophyAwarded.Broadcast(true);
-			break;
 		case EGameJoltComponentEnum::GJ_TROHIES_REMOVE:
 			OnTrophyRemoved.Broadcast(GetTrophyRemovalStatus());
 			break;
 		case EGameJoltComponentEnum::GJ_SCORES_FETCH:
 			OnScoreboardFetched.Broadcast(GetScoreboard());
-			break;
-		case EGameJoltComponentEnum::GJ_SCORES_ADD:
-
 			break;
 		case EGameJoltComponentEnum::GJ_SCORES_TABLE:
 			OnScoreboardTableFetched.Broadcast(GetScoreboardTable());

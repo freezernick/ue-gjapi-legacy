@@ -150,14 +150,10 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSessionClosed, bool, bIsSessionCl
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSessionChecked, bool, bIsSessionStillOpen);
 /* Fetch Trophies */
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTrophiesFetched, TArray<FTrophyInfo>, Trophies);
-/* Reward Trophy */
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTrophyAwarded, bool, bWasTrophyAwarded);
 /* Remove Trophy */
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTrophyRemoved, bool, bWasRemoved);
 /* Fetch Scoreboard */
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnScoreboardFetched, TArray<FScoreInfo>, Scores);
-/* Add Score */
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnScoreAdded, bool, bWasSuccessful);
 /* Fetch Scoreboard Table */
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnScoreboardTableFetched, TArray<FScoreTableInfo>, ScoreboardTable);
 /* Fetch Time */
@@ -264,16 +260,10 @@ public:
 	FOnTrophiesFetched OnTrophiesFetched;
 
 	UPROPERTY(BlueprintAssignable, Category = "GameJolt|Events|Specific")
-	FOnTrophyAwarded OnTrophyAwarded;
-
-	UPROPERTY(BlueprintAssignable, Category = "GameJolt|Events|Specific")
 	FOnTrophyRemoved OnTrophyRemoved;
 
 	UPROPERTY(BlueprintAssignable, Category = "GameJolt|Events|Specific")
 	FOnScoreboardFetched OnScoreboardFetched;
-
-	UPROPERTY(BlueprintAssignable, Category = "GameJolt|Events|Specific")
-	FOnScoreAdded OnScoreAdded;
 
 	UPROPERTY(BlueprintAssignable, Category = "GameJolt|Events|Specific")
 	FOnScoreboardTableFetched OnScoreboardTableFetched;
