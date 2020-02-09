@@ -137,9 +137,9 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnUserAuthorized, bool, bIsLoggedIn
 /* Get Current User Info */
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnUserFetched, FUserInfo, CurrentUserInfo);
 /* Get User Info*/
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnUsersFetched, TArray<FUserInfo>, UserInfo);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnUsersFetched, const TArray<FUserInfo>&, UserInfo);
 /* Get Friendlist */
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnFriendlistFetched, TArray<int32>, Friendlist);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnFriendlistFetched, const TArray<int32>&, Friendlist);
 /* Open Session */
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSessionOpened, bool, bIsSessionOpen);
 /* Ping Session */
