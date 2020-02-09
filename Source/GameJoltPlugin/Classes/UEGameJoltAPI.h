@@ -149,19 +149,19 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSessionClosed, bool, bIsSessionCl
 /* Check Session */
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSessionChecked, bool, bIsSessionStillOpen);
 /* Fetch Trophies */
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnTrophiesFetched, bool, bWasSuccessful, TArray<FTrophyInfo>, Trophies);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTrophiesFetched, TArray<FTrophyInfo>, Trophies);
 /* Reward Trophy */
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTrophyAwarded, bool, bWasTrophyAwarded);
 /* Remove Trophy */
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTrophyRemoved, bool, bWasRemoved);
 /* Fetch Scoreboard */
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnScoreboardFetched, bool, bWasFetched, TArray<FScoreInfo>, Scores);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnScoreboardFetched, TArray<FScoreInfo>, Scores);
 /* Add Score */
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnScoreAdded, bool, bWasSuccessful);
 /* Fetch Scoreboard Table */
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnScoreboardTableFetched, bool, bWasSuccessful, TArray<FScoreTableInfo>, ScoreboardTable);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnScoreboardTableFetched, TArray<FScoreTableInfo>, ScoreboardTable);
 /* Fetch Time */
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnTimeFetched, bool, bWasSuccessful, struct FDateTime, ServerTime);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTimeFetched, struct FDateTime, ServerTime);
 
 #pragma endregion
 

@@ -766,7 +766,7 @@ void UUEGameJoltAPI::OnReady(FHttpRequestPtr Request, FHttpResponsePtr Response,
 			OnSessionChecked.Broadcast(GetSessionStatus());
 			break;
 		case EGameJoltComponentEnum::GJ_TROPHIES_FETCH:
-			OnTrophiesFetched.Broadcast(true, GetTrophies());
+			OnTrophiesFetched.Broadcast(GetTrophies());
 			break;
 		case EGameJoltComponentEnum::GJ_TROPHIES_ADD:
 			OnTrophyAwarded.Broadcast(true);
@@ -775,16 +775,16 @@ void UUEGameJoltAPI::OnReady(FHttpRequestPtr Request, FHttpResponsePtr Response,
 			OnTrophyRemoved.Broadcast(GetTrophyRemovalStatus());
 			break;
 		case EGameJoltComponentEnum::GJ_SCORES_FETCH:
-			OnScoreboardFetched.Broadcast(true, GetScoreboard());
+			OnScoreboardFetched.Broadcast(GetScoreboard());
 			break;
 		case EGameJoltComponentEnum::GJ_SCORES_ADD:
 
 			break;
 		case EGameJoltComponentEnum::GJ_SCORES_TABLE:
-			OnScoreboardTableFetched.Broadcast(true, GetScoreboardTable());
+			OnScoreboardTableFetched.Broadcast(GetScoreboardTable());
 			break;
 		case EGameJoltComponentEnum::GJ_TIME:
-			OnTimeFetched.Broadcast(true, ReadServerTime());
+			OnTimeFetched.Broadcast(ReadServerTime());
 			break;
 	}
 	// Broadcast the result event
