@@ -483,7 +483,7 @@ public:
 	 * It's just a wrapper around FetchTrophies with an empty TArray as an parameter
 	 * You can call UUEGameJoltAPI::FetchTrophies directly
 	 **/
-	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Fetch All Trophies"), Category = "GameJolt")
+	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Fetch All Trophies"), Category = "GameJolt|Trophies")
 	void FetchAllTrophies(EGameJoltAchievedTrophies AchievedType);
 
 	/**
