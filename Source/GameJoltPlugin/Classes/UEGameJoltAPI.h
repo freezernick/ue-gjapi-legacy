@@ -513,7 +513,7 @@ public:
 	 * Checks the success of a trophy removal
 	 * @return Whether the trophy was successfuly remove or not
 	 */
-	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Check Trophy Removel Status"), Category = "GameJolt|Trophies")
+	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Check Trophy Removal Status"), Category = "GameJolt|Trophies")
 	bool GetTrophyRemovalStatus();
 
 #pragma endregion
