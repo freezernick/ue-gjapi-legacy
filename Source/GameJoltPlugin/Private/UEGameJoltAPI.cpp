@@ -523,6 +523,26 @@ TArray<FScoreTableInfo> UUEGameJoltAPI::GetScoreboardTable()
 	return returnTableinfo;
 }
 
+/* Fetches the rank of a highscore */
+bool UUEGameJoltAPI::FetchRank(int32 Score, int32 TableID = 0)
+{
+	LastActionPerformed = EGameJoltComponentEnum::GJ_SCORES_RANK;
+	FString output;
+	return SendRequest(output, TEXT("/scores/get-rank/?format=json&game_id=") + FString::FromInt(Game_ID) + "&sort=" + FString::FromInt(Score) + ((TableID != 0) ? ("&table_id=" + FString::FromInt(TableID)) : ""));
+}
+
+/* Gets the rank of a highscore from the response */
+int32 UUEGameJoltAPI::GetRank()
+{
+	UUEGameJoltAPI* response = GetObject("response");
+	if(!response)
+	{
+		UE_LOG(GJAPI, Error, TEXT("Response in GetRank is invalid! Was it called to early? LastActionPerformed is %s"), *UEnum::GetValueAsString<EGameJoltComponentEnum>(LastActionPerformed));
+		return 0;
+	}
+	return GetObject("response")->GetInt("rank");
+}
+
 /* Gets nested post data from the object with the specified key */
 UUEGameJoltAPI* UUEGameJoltAPI::GetObject(const FString& key)
 {
@@ -770,6 +790,9 @@ void UUEGameJoltAPI::OnReady(FHttpRequestPtr Request, FHttpResponsePtr Response,
 			break;
 		case EGameJoltComponentEnum::GJ_SCORES_TABLE:
 			OnScoreboardTableFetched.Broadcast(GetScoreboardTable());
+			break;
+		case EGameJoltComponentEnum::GJ_SCORES_RANK:
+			OnRankFetched.Broadcast(GetRank());
 			break;
 		case EGameJoltComponentEnum::GJ_TIME:
 			OnTimeFetched.Broadcast(ReadServerTime());

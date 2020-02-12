@@ -25,6 +25,7 @@ enum class EGameJoltComponentEnum : uint8
 	GJ_SCORES_FETCH 	UMETA(DisplayName = "Fetch Score"),
 	GJ_SCORES_ADD 		UMETA(DisplayName = "Add Score"),
 	GJ_SCORES_TABLE 	UMETA(DisplayName = "Get Score Tables"),
+	GJ_SCORES_RANK		UMETA(DisplayName = "Fetch Rank of Highscore"),
 	GJ_DATASTORE_FETCH	UMETA(DisplayName = "Fetch Data Store"),
 	GJ_DATASTORE_SET	UMETA(DisplayName = "Set Data Store"),
 	GJ_DATASTORE_UPDATE	UMETA(DisplayName = "Update Data Store"),
@@ -156,6 +157,8 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTrophyRemoved, bool, bWasRemoved)
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnScoreboardFetched, TArray<FScoreInfo>, Scores);
 /* Fetch Scoreboard Table */
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnScoreboardTableFetched, TArray<FScoreTableInfo>, ScoreboardTable);
+/* Fetch High-Score Rank */
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnRankFetched, int32, Rank);
 /* Fetch Time */
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTimeFetched, struct FDateTime, ServerTime);
 
@@ -268,6 +271,8 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "GameJolt|Events|Specific")
 	FOnScoreboardTableFetched OnScoreboardTableFetched;
 
+	UPROPERTY(BlueprintAssignable, Category = "GameJolt|Events|Specific")
+	FOnRankFetched OnRankFetched;
 	UPROPERTY(BlueprintAssignable, Category = "GameJolt|Events|Specific")
 	FOnTimeFetched OnTimeFetched;
 
@@ -551,6 +556,27 @@ public:
 	*/
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Get Scoreboard Table"), Category = "GameJolt|Scoreboard")
 	TArray<FScoreTableInfo>  GetScoreboardTable();
+
+	/**
+	 * Fetches the rank of the specified score
+	 * Use "Get Rank of Score" / GetRank or the OnGetRank delegate to read the results
+	 * @param Score The numeric score value to look for
+	 * @param TableID The ID of the scoreboard to search. '0' means primary table
+	 * @return Whether the request could be send successfully or not
+	 */
+	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Fetch Rank of Score"), Category = "GameJolt|Scoreboard")
+	bool FetchRank(int32 Score, int32 TableID);
+
+	/**
+	 * Gets the rank of a highscore from the response data
+	 * 
+	 * If the score is not represented by any rank on the score table, the request will return the rank that is closest to the requested score.
+	 * 
+	 * @warning Make sure to call "Fetch Rank of Score" / FetchRank before this
+	 * @return The rank of the score
+	 */
+	UFUNCTION(BlueprintPure, meta = (DisplayName = "Get Rank of Score"), Category = "GameJolt|Scoreboard")
+	int32 GetRank();
 
 #pragma endregion
 
