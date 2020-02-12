@@ -526,6 +526,7 @@ TArray<FScoreTableInfo> UUEGameJoltAPI::GetScoreboardTable()
 /* Fetches the rank of a highscore */
 bool UUEGameJoltAPI::FetchRank(int32 Score, int32 TableID = 0)
 {
+	LastActionPerformed = EGameJoltComponentEnum::GJ_SCORES_RANK;
 	FString output;
 	return SendRequest(output, TEXT("/scores/get-rank/?format=json&game_id=") + FString::FromInt(Game_ID) + "&sort=" + FString::FromInt(Score) + ((TableID != 0) ? ("&table_id=" + FString::FromInt(TableID)) : ""));
 }
@@ -789,6 +790,9 @@ void UUEGameJoltAPI::OnReady(FHttpRequestPtr Request, FHttpResponsePtr Response,
 			break;
 		case EGameJoltComponentEnum::GJ_SCORES_TABLE:
 			OnScoreboardTableFetched.Broadcast(GetScoreboardTable());
+			break;
+		case EGameJoltComponentEnum::GJ_SCORES_RANK:
+			OnRankFetched.Broadcast(GetRank());
 			break;
 		case EGameJoltComponentEnum::GJ_TIME:
 			OnTimeFetched.Broadcast(ReadServerTime());

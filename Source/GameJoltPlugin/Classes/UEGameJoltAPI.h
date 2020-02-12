@@ -25,6 +25,7 @@ enum class EGameJoltComponentEnum : uint8
 	GJ_SCORES_FETCH 	UMETA(DisplayName = "Fetch Score"),
 	GJ_SCORES_ADD 		UMETA(DisplayName = "Add Score"),
 	GJ_SCORES_TABLE 	UMETA(DisplayName = "Get Score Tables"),
+	GJ_SCORES_RANK		UMETA(DisplayName = "Fetch Rank of Highscore"),
 	GJ_DATASTORE_FETCH	UMETA(DisplayName = "Fetch Data Store"),
 	GJ_DATASTORE_SET	UMETA(DisplayName = "Set Data Store"),
 	GJ_DATASTORE_UPDATE	UMETA(DisplayName = "Update Data Store"),
@@ -156,6 +157,8 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTrophyRemoved, bool, bWasRemoved)
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnScoreboardFetched, TArray<FScoreInfo>, Scores);
 /* Fetch Scoreboard Table */
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnScoreboardTableFetched, TArray<FScoreTableInfo>, ScoreboardTable);
+/* Fetch High-Score Rank */
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnRankFetched, int32, Rank);
 /* Fetch Time */
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTimeFetched, struct FDateTime, ServerTime);
 
@@ -268,6 +271,8 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "GameJolt|Events|Specific")
 	FOnScoreboardTableFetched OnScoreboardTableFetched;
 
+	UPROPERTY(BlueprintAssignable, Category = "GameJolt|Events|Specific")
+	FOnRankFetched OnRankFetched;
 	UPROPERTY(BlueprintAssignable, Category = "GameJolt|Events|Specific")
 	FOnTimeFetched OnTimeFetched;
 
