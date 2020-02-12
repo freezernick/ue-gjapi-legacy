@@ -552,6 +552,27 @@ public:
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Get Scoreboard Table"), Category = "GameJolt|Scoreboard")
 	TArray<FScoreTableInfo>  GetScoreboardTable();
 
+	/**
+	 * Fetches the rank of the specified score
+	 * Use "Get Rank of Score" / GetRank or the OnGetRank delegate to read the results
+	 * @param Score The numeric score value to look for
+	 * @param TableID The ID of the scoreboard to search. '0' means primary table
+	 * @return Whether the request could be send successfully or not
+	 */
+	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Fetch Rank of Score"), Category = "GameJolt|Scoreboard")
+	bool FetchRank(int32 Score, int32 TableID);
+
+	/**
+	 * Gets the rank of a highscore from the response data
+	 * 
+	 * If the score is not represented by any rank on the score table, the request will return the rank that is closest to the requested score.
+	 * 
+	 * @warning Make sure to call "Fetch Rank of Score" / FetchRank before this
+	 * @return The rank of the score
+	 */
+	UFUNCTION(BlueprintPure, meta = (DisplayName = "Get Rank of Score"), Category = "GameJolt|Scoreboard")
+	int32 GetRank();
+
 #pragma endregion
 
 #pragma region Utility
