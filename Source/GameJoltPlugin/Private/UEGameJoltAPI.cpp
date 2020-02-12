@@ -311,7 +311,7 @@ void UUEGameJoltAPI::FetchAllTrophies(EGameJoltAchievedTrophies AchievedType)
 }
 
 /* Gets information for the selected trophies */
-void UUEGameJoltAPI::FetchTrophies(EGameJoltAchievedTrophies AchievedType, TArray<int32> Trophies_ID)
+void UUEGameJoltAPI::FetchTrophies(EGameJoltAchievedTrophies AchievedType, TArray<int32> Trophy_IDs)
 {
 	TArray<FTrophyInfo> returnTrophies;
 	bool ret = true;
@@ -337,9 +337,9 @@ void UUEGameJoltAPI::FetchTrophies(EGameJoltAchievedTrophies AchievedType, TArra
 	}
 
 	GameIDString = FString::FromInt(Game_ID);
-	for (int32 i = 0; i < Trophies_ID.Num(); i++){
-		TrophyIDString += FString::FromInt(Trophies_ID[i]);
-		if (i != Trophies_ID.Num()-1)
+	for (int32 i = 0; i < Trophy_IDs.Num(); i++){
+		TrophyIDString += FString::FromInt(Trophy_IDs[i]);
+		if (i != Trophy_IDs.Num()-1)
 		{
 			TrophyIDString += TEXT(",");
 		}
@@ -349,7 +349,7 @@ void UUEGameJoltAPI::FetchTrophies(EGameJoltAchievedTrophies AchievedType, TArra
 		ret = SendRequest(output, TEXT("/trophies/?format=json&game_id=") + GameIDString +
 			TEXT("&username=") + UserName +
 			TEXT("&user_token=") + UserToken +
-			(Trophies_ID.Num() > 0 ? "&trophy_id=" : "") + TrophyIDString);
+			(Trophy_IDs.Num() > 0 ? "&trophy_id=" : "") + TrophyIDString);
 	}
 	else //if We Want to get what trophies the User achieved have Not Achieved
 	{
@@ -357,7 +357,7 @@ void UUEGameJoltAPI::FetchTrophies(EGameJoltAchievedTrophies AchievedType, TArra
 			TEXT("&username=") + UserName +
 			TEXT("&user_token=") + UserToken +
 			TEXT("&achieved=" ) + AchievedString +
-			(Trophies_ID.Num() > 0 ? "&trophy_id=" : "") + TrophyIDString);
+			(Trophy_IDs.Num() > 0 ? "&trophy_id=" : "") + TrophyIDString);
 	}
 
 	if (!ret)
