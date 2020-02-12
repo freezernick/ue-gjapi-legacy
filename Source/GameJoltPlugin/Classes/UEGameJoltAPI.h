@@ -492,7 +492,7 @@ public:
 	 * @param Tropies_ID An array of trophy IDs. An empty array will return all trophies
 	 */
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Fetch Trophies"), Category = "GameJolt|Trophies")
-	void FetchTrophies(EGameJoltAchievedTrophies AchievedType, TArray<int32> Trophies_ID);
+	void FetchTrophies(EGameJoltAchievedTrophies AchievedType, TArray<int32> Trophy_IDs);
 
 	/**
 	 * Gets the trophy information from the fetched trophies
