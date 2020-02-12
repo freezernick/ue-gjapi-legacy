@@ -437,14 +437,6 @@ public:
 	bool FetchUsers(TArray<int32> Users);
 
 	/**
-	 * Gets an array of users and puts them in an array of FUserInfo structs
-	 * @return An array with the FUserInfo structs
-	 * @deprecated Will be removed in 1.8. Use GetUserInfo() instead
-	*/
-	UFUNCTION(BlueprintCallable, meta = (DeprecatedFunction, DeprecationMessage = "Will be removed in 1.8. Use GetUserInfo instead", DisplayName = "Get Array of Users"), Category = "GameJolt|User")
-	TArray<FUserInfo> FetchArrayUsers();
-
-	/**
 	 * Gets a single or an array of users and puts them in an array of FUserInfo structs
 	 * @return An array with the FUserInfo structs
 	 */
