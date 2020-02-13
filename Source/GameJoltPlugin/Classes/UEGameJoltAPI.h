@@ -89,23 +89,29 @@ struct FTrophyInfo
 USTRUCT(BlueprintType)
 struct FScoreInfo
 {
-	GENERATED_USTRUCT_BODY()
+	GENERATED_BODY()
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Score String")
-	FString ScoreString;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Score Sort")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		FString ScoreString;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		int32 ScoreSort;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Score Extra Data")
-		FString extra_data;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Score Username")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		FString ExtraData;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		FString UserName;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Score User ID")
-		int32 User_Id;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Score Guest Username")
-		FString guestUser;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Score Stored")
-		FString stored;
-
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		int32 UserID;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		FString Guest;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		FString UnixTimestamp;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		struct FDateTime TimeStamp;
+	
+	FScoreInfo()
+	{
+		TimeStamp = FDateTime();
+	}
 };
 
 /* Contains all information about a scoreboard */

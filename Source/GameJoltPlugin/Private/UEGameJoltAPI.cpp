@@ -445,12 +445,12 @@ TArray<FScoreInfo> UUEGameJoltAPI::GetScoreboard()
 	{
 		tempScore.ScoreSort = returnArray[i]->GetInt("sort");
 		tempScore.ScoreString = returnArray[i]->GetString("score");
-		tempScore.extra_data = returnArray[i]->GetString("extra_data");
+		tempScore.ExtraData = returnArray[i]->GetString("extra_data");
 		tempScore.UserName = returnArray[i]->GetString("user");
-		tempScore.User_Id = returnArray[i]->GetInt("user_id");
-		tempScore.guestUser = returnArray[i]->GetString("guest");
-		tempScore.stored = returnArray[i]->GetString("stored");
-
+		tempScore.UserID = returnArray[i]->GetInt("user_id");
+		tempScore.Guest = returnArray[i]->GetString("guest");
+		tempScore.UnixTimestamp = returnArray[i]->GetString("stored");
+		tempScore.TimeStamp = FDateTime::FromUnixTimestamp(returnArray[i]->GetInt("stored"));
 		returnScoreInfo.Add(tempScore);
 	}
 	return returnScoreInfo;
