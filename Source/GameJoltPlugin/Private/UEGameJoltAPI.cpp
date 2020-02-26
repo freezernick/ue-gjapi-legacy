@@ -27,12 +27,6 @@ UWorld* UUEGameJoltAPI::GetWorld() const
 	return World;
 }
 
-/* Gets the GameID */
-int32 UUEGameJoltAPI::GetGameID()
-{
-	return Game_ID;
-}
-
 /* Sets information needed for all requests */
 void UUEGameJoltAPI::Init(FString PrivateKey, int32 GameID)
 {
@@ -77,18 +71,6 @@ FDateTime UUEGameJoltAPI::ReadServerTime()
 	int32 Second = responseField->GetInt("second");
 
 	return FDateTime(Year, Month, Day, Hour, Minute, Second);
-}
-
-/* Returns the private key */
-FString UUEGameJoltAPI::GetGamePrivateKey()
-{
-	return Game_PrivateKey;
-}
-
-/* Returns the username */
-FString UUEGameJoltAPI::GetUsername()
-{
-	return UserName;
 }
 
 /* Creates a new instance of the UUEGameJoltAPI class, for use in Blueprint graphs. */
