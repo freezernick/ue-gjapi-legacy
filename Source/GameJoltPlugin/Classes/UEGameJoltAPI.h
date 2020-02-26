@@ -528,7 +528,7 @@ public:
 	 * @return True if the request succeded, false if not
 	**/
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Add Score to Scoreboard"), Category = "GameJolt|Scoreboard")
-	bool AddScore(FString UserScore, int32 UserScore_Sort, FString GuestUser, FString extra_data, int32 table_id);
+	bool AddScore(const FString UserScore, const int32 UserScore_Sort, const FString GuestUser, const FString extra_data, const int32 table_id);
 
 	/**
 	 * Returns a list of high score tables for a game.
@@ -552,7 +552,7 @@ public:
 	 * @return Whether the request could be send successfully or not
 	 */
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Fetch Rank of Score"), Category = "GameJolt|Scoreboard")
-	bool FetchRank(int32 Score, int32 TableID);
+	bool FetchRank(const int32 Score, const int32 TableID);
 
 	/**
 	 * Gets the rank of a highscore from the response data
