@@ -28,7 +28,7 @@ UWorld* UUEGameJoltAPI::GetWorld() const
 }
 
 /* Gets the GameID */
-int32 UUEGameJoltAPI::GetGameID()
+int32 UUEGameJoltAPI::GetGameID() const
 {
 	return Game_ID;
 }
@@ -80,13 +80,13 @@ FDateTime UUEGameJoltAPI::ReadServerTime()
 }
 
 /* Returns the private key */
-FString UUEGameJoltAPI::GetGamePrivateKey()
+FString UUEGameJoltAPI::GetGamePrivateKey() const
 {
 	return Game_PrivateKey;
 }
 
 /* Returns the username */
-FString UUEGameJoltAPI::GetUsername()
+FString UUEGameJoltAPI::GetUsername() const
 {
 	return UserName;
 }
