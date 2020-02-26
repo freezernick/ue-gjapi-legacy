@@ -329,25 +329,6 @@ public:
 	/* Public Functions */
 
 	/**
-	 * Returns the game ID
-	 * @return The game ID - 0 is not specified
-	 **/
-	UFUNCTION(BlueprintPure, meta = (DisplayName = "Get Your Game ID"), Category = "GameJolt")
-	int32 GetGameID() const;
-
-	/** Returns the private key 
-	 * @return The private key - Empty if not specified
-	**/
-	UFUNCTION(BlueprintPure, meta = (DisplayName = "Get Your Game Private Key"), Category = "GameJolt")
-	FString GetGamePrivateKey() const;
-	
-	/** Gets the username 
-	 * @return The username - Empty if not logged in
-	**/
-	UFUNCTION(BlueprintPure, meta = (DisplayName = "Get Username"), Category = "GameJolt|User")
-	FString GetUsername() const;
-
-	/**
 	 * Sets information needed for all requests
 	 * You can find these values in the GameJolt API section of your game's dashboard
 	 * @param PrivateKey The private key of your game 
