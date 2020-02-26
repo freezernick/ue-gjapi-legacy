@@ -335,7 +335,7 @@ public:
 	 * @param GameID The id of your game 
 	 **/
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Init"), Category = "GameJolt")
-	void Init(FString PrivateKey, int32 GameID);
+	void Init(const FString PrivateKey, const int32 GameID);
 
 #pragma region Session
 
@@ -400,7 +400,7 @@ public:
  	 * @param Token The token - case insensitive
  	 */
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Login"), Category = "GameJolt|User")
-	void Login(FString Name, FString Token);
+	void Login(const FString Name, const FString Token);
 
 	/**
 	 * Checks if the authentification was succesful
@@ -426,7 +426,7 @@ public:
 	 * @return True if the request succeded, false if not
 	 */
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Fetch Users"), Category = "GameJolt|User")
-	bool FetchUsers(TArray<int32> Users);
+	bool FetchUsers(const TArray<int32> Users);
 
 	/**
 	 * Gets a single or an array of users and puts them in an array of FUserInfo structs
@@ -459,7 +459,7 @@ public:
 	 * @return True if the request succeded, false if not
 	 **/
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Reward Trophies"), Category = "GameJolt|Trophies")
-	bool RewardTrophy(int32 Trophy_ID);
+	bool RewardTrophy(const int32 Trophy_ID);
 
 	/**
 	 * Gets information for all trophies
@@ -468,7 +468,7 @@ public:
 	 * You can call UUEGameJoltAPI::FetchTrophies directly
 	 **/
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Fetch All Trophies"), Category = "GameJolt|Trophies")
-	void FetchAllTrophies(EGameJoltAchievedTrophies AchievedType);
+	void FetchAllTrophies(const EGameJoltAchievedTrophies AchievedType);
 
 	/**
 	 * Gets information for the selected trophies
@@ -476,7 +476,7 @@ public:
 	 * @param Tropies_ID An array of trophy IDs. An empty array will return all trophies
 	 */
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Fetch Trophies"), Category = "GameJolt|Trophies")
-	void FetchTrophies(EGameJoltAchievedTrophies AchievedType, TArray<int32> Trophy_IDs);
+	void FetchTrophies(const EGameJoltAchievedTrophies AchievedType, const TArray<int32> Trophy_IDs);
 
 	/**
 	 * Gets the trophy information from the fetched trophies
@@ -491,7 +491,7 @@ public:
 	 * @return Whether the request could be send or not
 	 */
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Remove Rewarded Trophy"), Category = "GameJolt|Trophies")
-	bool RemoveRewardedTrophy(int32 Trophy_ID);
+	bool RemoveRewardedTrophy(const int32 Trophy_ID);
 
 	/**
 	 * Checks the success of a trophy removal
@@ -509,7 +509,7 @@ public:
 	 * @return True if the request succeded, false if not
 	**/
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Fetch Scoreboard"), Category = "GameJolt|Scoreboard")
-	bool FetchScoreboard(int32 ScoreLimit, int32 Table_id);
+	bool FetchScoreboard(const int32 ScoreLimit, const int32 Table_id);
 
 	/**
 	 * Gets the list of scores fetched with FetchScoreboard
@@ -528,7 +528,7 @@ public:
 	 * @return True if the request succeded, false if not
 	**/
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Add Score to Scoreboard"), Category = "GameJolt|Scoreboard")
-	bool AddScore(FString UserScore, int32 UserScore_Sort, FString GuestUser, FString extra_data, int32 table_id);
+	bool AddScore(const FString UserScore, const int32 UserScore_Sort, const FString GuestUser, const FString extra_data, const int32 table_id);
 
 	/**
 	 * Returns a list of high score tables for a game.
@@ -552,7 +552,7 @@ public:
 	 * @return Whether the request could be send successfully or not
 	 */
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Fetch Rank of Score"), Category = "GameJolt|Scoreboard")
-	bool FetchRank(int32 Score, int32 TableID);
+	bool FetchRank(const int32 Score, const int32 TableID);
 
 	/**
 	 * Gets the rank of a highscore from the response data

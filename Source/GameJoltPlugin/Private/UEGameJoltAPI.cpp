@@ -28,7 +28,7 @@ UWorld* UUEGameJoltAPI::GetWorld() const
 }
 
 /* Sets information needed for all requests */
-void UUEGameJoltAPI::Init(FString PrivateKey, int32 GameID)
+void UUEGameJoltAPI::Init(const FString PrivateKey, const int32 GameID)
 {
 	Game_ID = GameID;
 	Game_PrivateKey = PrivateKey;
@@ -85,7 +85,7 @@ UUEGameJoltAPI* UUEGameJoltAPI::Create(UObject* WorldContextObject) {
 }
 
 /* Sends a request to authentificate the user */
-void UUEGameJoltAPI::Login(FString name, FString token)
+void UUEGameJoltAPI::Login(const FString name, const FString token)
 {
 	FString output;
 	FString GameIDString = FString::FromInt(Game_ID);
@@ -135,7 +135,7 @@ bool UUEGameJoltAPI::FetchUser()
 }
 
 /* Fetches an array of users */
-bool UUEGameJoltAPI::FetchUsers(TArray<int32> Users)
+bool UUEGameJoltAPI::FetchUsers(const TArray<int32> Users)
 {
 	FString output;
 	LastActionPerformed = EGameJoltComponentEnum::GJ_USERS_FETCH;
@@ -255,7 +255,7 @@ TArray<FUserInfo> UUEGameJoltAPI::GetUserInfo()
 }
 
 /* Awards the current user a trophy */
-bool UUEGameJoltAPI::RewardTrophy(int32 Trophy_ID)
+bool UUEGameJoltAPI::RewardTrophy(const int32 Trophy_ID)
 {
 
 	bool ret = true;
@@ -280,14 +280,14 @@ bool UUEGameJoltAPI::RewardTrophy(int32 Trophy_ID)
 }
 
 /* Gets information for all trophies */
-void UUEGameJoltAPI::FetchAllTrophies(EGameJoltAchievedTrophies AchievedType)
+void UUEGameJoltAPI::FetchAllTrophies(const EGameJoltAchievedTrophies AchievedType)
 {
 	TArray<int32> Trophies;
 	FetchTrophies(AchievedType, Trophies);
 }
 
 /* Gets information for the selected trophies */
-void UUEGameJoltAPI::FetchTrophies(EGameJoltAchievedTrophies AchievedType, TArray<int32> Trophy_IDs)
+void UUEGameJoltAPI::FetchTrophies(const EGameJoltAchievedTrophies AchievedType, const TArray<int32> Trophy_IDs)
 {
 	TArray<FTrophyInfo> returnTrophies;
 	bool ret = true;
@@ -368,7 +368,7 @@ TArray<FTrophyInfo> UUEGameJoltAPI::GetTrophies()
 }
 
 /* Unachieves a trophy */
-bool UUEGameJoltAPI::RemoveRewardedTrophy(int32 Trophy_ID)
+bool UUEGameJoltAPI::RemoveRewardedTrophy(const int32 Trophy_ID)
 {
 	FString output;
 	LastActionPerformed = EGameJoltComponentEnum::GJ_TROHIES_REMOVE;
@@ -388,7 +388,7 @@ bool UUEGameJoltAPI::GetTrophyRemovalStatus()
 }
 
 /* Returns a list of scores either for a user or globally for a game */
-bool UUEGameJoltAPI::FetchScoreboard(int32 ScoreLimit, int32 Table_id)
+bool UUEGameJoltAPI::FetchScoreboard(const int32 ScoreLimit, const int32 Table_id)
 {
 	TArray<FTrophyInfo> returnTrophies;
 	bool ret = true;
@@ -439,7 +439,7 @@ TArray<FScoreInfo> UUEGameJoltAPI::GetScoreboard()
 }
 
 /* Adds an entry to a scoreboard */
-bool UUEGameJoltAPI::AddScore(FString UserScore, int32 UserScore_Sort, FString GuestUser, FString extra_data, int32 table_id)
+bool UUEGameJoltAPI::AddScore(const FString UserScore, const int32 UserScore_Sort, const FString GuestUser, const FString extra_data, const int32 table_id)
 {
 	bool ret = true;
 	FString output;
@@ -506,7 +506,7 @@ TArray<FScoreTableInfo> UUEGameJoltAPI::GetScoreboardTable()
 }
 
 /* Fetches the rank of a highscore */
-bool UUEGameJoltAPI::FetchRank(int32 Score, int32 TableID = 0)
+bool UUEGameJoltAPI::FetchRank(const int32 Score, const int32 TableID = 0)
 {
 	LastActionPerformed = EGameJoltComponentEnum::GJ_SCORES_RANK;
 	FString output;
