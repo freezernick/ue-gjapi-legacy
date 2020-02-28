@@ -187,14 +187,13 @@ bool UUEGameJoltAPI::OpenSession()
 }
 
 /* Pings the session */
-bool UUEGameJoltAPI::PingSession()
+bool UUEGameJoltAPI::PingSession(ESessionStatus SessionStatus)
 {
 	FString output;
-	FString GameIDString;
-	GameIDString = FString::FromInt(Game_ID);
+	FString SessionString = SessionStatus == ESessionStatus::Active ? FString("active") : FString("idle");
+	FString GameIDString = FString::FromInt(Game_ID);
 	LastActionPerformed = EGameJoltComponentEnum::GJ_SESSION_PING;
-	return SendRequest(output, TEXT("/sessions/ping/?format=json&status=active&game_id=") + GameIDString +
-		TEXT("&username=") + UserName + TEXT("&user_token=") + UserToken);
+	return SendRequest(output, TEXT("/sessions/ping/?format=json&status=" + SessionString + "&game_id=" + GameIDString + "&username=" + UserName + "&user_token=" + UserToken));
 }
 
 /* Closes the session */
