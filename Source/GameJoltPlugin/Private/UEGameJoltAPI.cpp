@@ -205,13 +205,14 @@ bool UUEGameJoltAPI::OpenSession()
 }
 
 /* Pings the session */
-bool UUEGameJoltAPI::PingSession()
+bool UUEGameJoltAPI::PingSession(ESessionStatus SessionStatus)
 {
 	FString output;
 	FString GameIDString;
 	GameIDString = FString::FromInt(Game_ID);
 	LastActionPerformed = EGameJoltComponentEnum::GJ_SESSION_PING;
-	return SendRequest(output, TEXT("/sessions/ping/?format=json&status=active&game_id=") + GameIDString +
+	const TEnumAsByte<ESessionStatus> SessionEnum = SessionStatus;
+	return SendRequest(output, TEXT("/sessions/ping/?format=json&status=" + UEnum::GetValueAsString(SessionEnum.GetValue()) + "&game_id=") + GameIDString +
 		TEXT("&username=") + UserName + TEXT("&user_token=") + UserToken);
 }
 

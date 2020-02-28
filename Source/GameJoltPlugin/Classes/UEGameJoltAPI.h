@@ -43,6 +43,17 @@ enum class EGameJoltAchievedTrophies : uint8
 	GJ_ACHIEVEDTROPHY_GAME UMETA(DisplayName = "Unachieved Trophies")
 };
 
+
+/** Represents the possible values for the status of a session
+ * https://gamejolt.com/game-api/doc/sessions/ping
+ */
+UENUM(BlueprintType)
+enum class ESessionStatus : uint8
+{
+	Active,
+	Idle
+};
+
 /* Contains all available information about a user */
 USTRUCT(BlueprintType)
 struct FUserInfo
@@ -367,10 +378,11 @@ public:
 
 	/**
 	 * Pings the Session. Every 30 to 60 seconds is good.
+	 * @param SessionStatus The status of the session. Can be "Active" or "Idle"
 	 * @return True if the request succeded, false if not
 	 **/
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Ping Session"), Category = "GameJolt|Sessions")
-	bool PingSession();
+	bool PingSession(ESessionStatus SessionStatus);
 
 	/**
 	 * Closes the session
