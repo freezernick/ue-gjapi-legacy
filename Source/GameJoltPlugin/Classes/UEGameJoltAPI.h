@@ -346,6 +346,7 @@ public:
 	 * @param GameID The id of your game 
 	 **/
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Init"), Category = "GameJolt")
+	void Init(const int32 GameID, const FString PrivateKey);
 	void Init(const FString PrivateKey, const int32 GameID);
 
 #pragma region Session
