@@ -740,6 +740,12 @@ void UUEGameJoltAPI::OnReady(FHttpRequestPtr Request, FHttpResponsePtr Response,
 	// Process the string
 	FromString(Response->GetContentAsString());
 
+	if(GetObject("response")->GetBool("success") == false && LastActionPerformed != EGameJoltComponentEnum::GJ_SESSION_CHECK)
+	{
+		OnFailed.Broadcast();
+		return;
+	}
+
 	switch(LastActionPerformed)
 	{
 		case EGameJoltComponentEnum::GJ_USER_AUTH:
@@ -784,6 +790,7 @@ void UUEGameJoltAPI::OnReady(FHttpRequestPtr Request, FHttpResponsePtr Response,
 	}
 	// Broadcast the result event
 	OnGetResult.Broadcast();
+	return;
 }
 
 /* Resets the saved data */
