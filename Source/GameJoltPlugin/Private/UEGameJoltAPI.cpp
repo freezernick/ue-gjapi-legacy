@@ -89,6 +89,7 @@ void UUEGameJoltAPI::Login(const FString name, const FString token)
 {
 	FString output;
 	FString GameIDString = FString::FromInt(Game_ID);
+	LastActionPerformed = EGameJoltComponentEnum::GJ_USER_AUTH;
 	UserName = name;
 	UserToken = token;
 	SendRequest(output, TEXT("/users/auth/?format=json&game_id=") + GameIDString + TEXT("&username=") + name + TEXT("&user_token=") + token);
@@ -734,6 +735,12 @@ void UUEGameJoltAPI::OnReady(FHttpRequestPtr Request, FHttpResponsePtr Response,
 	// Process the string
 	FromString(Response->GetContentAsString());
 
+	if(GetObject("response")->GetBool("success") == false && LastActionPerformed != EGameJoltComponentEnum::GJ_SESSION_CHECK)
+	{
+		OnFailed.Broadcast();
+		return;
+	}
+
 	switch(LastActionPerformed)
 	{
 		case EGameJoltComponentEnum::GJ_USER_AUTH:
@@ -781,6 +788,7 @@ void UUEGameJoltAPI::OnReady(FHttpRequestPtr Request, FHttpResponsePtr Response,
 	}
 	// Broadcast the result event
 	OnGetResult.Broadcast();
+	return;
 }
 
 /* Resets the saved data */
