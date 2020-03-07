@@ -1,18 +1,17 @@
 {
 	"FileVersion": 3,
-	"Version": 13,
-	"VersionName": "1.7.1",
+	"Version": 14,
+	"VersionName": "1.8",
 	"FriendlyName": "GameJolt Plugin",
 	"Description": " This plugin allows you to communicate with the GameJolt-Servers to use Scoreboards, Sessions, Cloud-Data-Storage and more.",
 	"Category": "GameJolt",
 	"CreatedBy": "FreezerNick",
 	"CreatedByURL": "https://gamejolt.com/@FreezerNick",
-	"DocsURL": "https://gitlab.com/f2p-entertainment/plugins/ue4-gamejoltapi/wikis/home",
-	"SupportURL": "mailto:incoming+f2p-entertainment-plugins-ue4-gamejoltapi-5318268-issue-@incoming.gitlab.com",
+	"DocsURL": "https://gitlab.com/f2p-entertainment/plugins/ue4/gj/ue4-gamejoltapi/-/wikis/home",
+	"SupportURL": "mailto:incoming+f2p-entertainment-plugins-ue4-gj-ue4-gamejoltapi-5318268-issue-@incoming.gitlab.com",
 	"EnabledByDefault": false,
 	"CanContainContent": false,
-	"IsBetaVersion": true,
-	"Installed": false,
+	"IsBetaVersion": false,
 	"Modules": [
 		{
 			"Name": "GameJoltPlugin",

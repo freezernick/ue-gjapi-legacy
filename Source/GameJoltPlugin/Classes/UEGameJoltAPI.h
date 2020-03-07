@@ -25,6 +25,7 @@ enum class EGameJoltComponentEnum : uint8
 	GJ_SCORES_FETCH 	UMETA(DisplayName = "Fetch Score"),
 	GJ_SCORES_ADD 		UMETA(DisplayName = "Add Score"),
 	GJ_SCORES_TABLE 	UMETA(DisplayName = "Get Score Tables"),
+	GJ_SCORES_RANK		UMETA(DisplayName = "Fetch Rank of Highscore"),
 	GJ_DATASTORE_FETCH	UMETA(DisplayName = "Fetch Data Store"),
 	GJ_DATASTORE_SET	UMETA(DisplayName = "Set Data Store"),
 	GJ_DATASTORE_UPDATE	UMETA(DisplayName = "Update Data Store"),
@@ -40,6 +41,17 @@ enum class EGameJoltAchievedTrophies : uint8
 	GJ_ACHIEVEDTROPHY_BLANK UMETA(DisplayName = "All Trophies"),
 	GJ_ACHIEVEDTROPHY_USER UMETA(DisplayName = "User Achieved Trophies"),
 	GJ_ACHIEVEDTROPHY_GAME UMETA(DisplayName = "Unachieved Trophies")
+};
+
+
+/** Represents the possible values for the status of a session
+ * https://gamejolt.com/game-api/doc/sessions/ping
+ */
+UENUM(BlueprintType)
+enum class ESessionStatus : uint8
+{
+	Active,
+	Idle
 };
 
 /* Contains all available information about a user */
@@ -88,23 +100,29 @@ struct FTrophyInfo
 USTRUCT(BlueprintType)
 struct FScoreInfo
 {
-	GENERATED_USTRUCT_BODY()
+	GENERATED_BODY()
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Score String")
-	FString ScoreString;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Score Sort")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		FString ScoreString;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		int32 ScoreSort;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Score Extra Data")
-		FString extra_data;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Score Username")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		FString ExtraData;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		FString UserName;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Score User ID")
-		int32 User_Id;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Score Guest Username")
-		FString guestUser;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Score Stored")
-		FString stored;
-
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		int32 UserID;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		FString Guest;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		FString UnixTimestamp;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		struct FDateTime TimeStamp;
+	
+	FScoreInfo()
+	{
+		TimeStamp = FDateTime();
+	}
 };
 
 /* Contains all information about a scoreboard */
@@ -156,6 +174,8 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTrophyRemoved, bool, bWasRemoved)
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnScoreboardFetched, TArray<FScoreInfo>, Scores);
 /* Fetch Scoreboard Table */
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnScoreboardTableFetched, TArray<FScoreTableInfo>, ScoreboardTable);
+/* Fetch High-Score Rank */
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnRankFetched, int32, Rank);
 /* Fetch Time */
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTimeFetched, struct FDateTime, ServerTime);
 
@@ -269,6 +289,8 @@ public:
 	FOnScoreboardTableFetched OnScoreboardTableFetched;
 
 	UPROPERTY(BlueprintAssignable, Category = "GameJolt|Events|Specific")
+	FOnRankFetched OnRankFetched;
+	UPROPERTY(BlueprintAssignable, Category = "GameJolt|Events|Specific")
 	FOnTimeFetched OnTimeFetched;
 
 #pragma endregion
@@ -318,32 +340,14 @@ public:
 	/* Public Functions */
 
 	/**
-	 * Returns the game ID
-	 * @return The game ID - 0 is not specified
-	 **/
-	UFUNCTION(BlueprintPure, meta = (DisplayName = "Get Your Game ID"), Category = "GameJolt")
-	int32 GetGameID();
-
-	/** Returns the private key 
-	 * @return The private key - Empty if not specified
-	**/
-	UFUNCTION(BlueprintPure, meta = (DisplayName = "Get Your Game Private Key"), Category = "GameJolt")
-	FString GetGamePrivateKey();
-	
-	/** Gets the username 
-	 * @return The username - Empty if not logged in
-	**/
-	UFUNCTION(BlueprintPure, meta = (DisplayName = "Get Username"), Category = "GameJolt|User")
-	FString GetUsername();
-
-	/**
 	 * Sets information needed for all requests
 	 * You can find these values in the GameJolt API section of your game's dashboard
 	 * @param PrivateKey The private key of your game 
 	 * @param GameID The id of your game 
 	 **/
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Init"), Category = "GameJolt")
-	void Init(FString PrivateKey, int32 GameID);
+	void Init(const int32 GameID, const FString PrivateKey);
+	void Init(const FString PrivateKey, const int32 GameID);
 
 #pragma region Session
 
@@ -356,10 +360,11 @@ public:
 
 	/**
 	 * Pings the Session. Every 30 to 60 seconds is good.
+	 * @param SessionStatus The status of the session. Can be "Active" or "Idle"
 	 * @return True if the request succeded, false if not
 	 **/
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Ping Session"), Category = "GameJolt|Sessions")
-	bool PingSession();
+	bool PingSession(ESessionStatus SessionStatus);
 
 	/**
 	 * Closes the session
@@ -408,7 +413,7 @@ public:
  	 * @param Token The token - case insensitive
  	 */
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Login"), Category = "GameJolt|User")
-	void Login(FString Name, FString Token);
+	void Login(const FString Name, const FString Token);
 
 	/**
 	 * Checks if the authentification was succesful
@@ -434,15 +439,7 @@ public:
 	 * @return True if the request succeded, false if not
 	 */
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Fetch Users"), Category = "GameJolt|User")
-	bool FetchUsers(TArray<int32> Users);
-
-	/**
-	 * Gets an array of users and puts them in an array of FUserInfo structs
-	 * @return An array with the FUserInfo structs
-	 * @deprecated Will be removed in 1.8. Use GetUserInfo() instead
-	*/
-	UFUNCTION(BlueprintCallable, meta = (DeprecatedFunction, DeprecationMessage = "Will be removed in 1.8. Use GetUserInfo instead", DisplayName = "Get Array of Users"), Category = "GameJolt|User")
-	TArray<FUserInfo> FetchArrayUsers();
+	bool FetchUsers(const TArray<int32> Users);
 
 	/**
 	 * Gets a single or an array of users and puts them in an array of FUserInfo structs
@@ -475,7 +472,7 @@ public:
 	 * @return True if the request succeded, false if not
 	 **/
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Reward Trophies"), Category = "GameJolt|Trophies")
-	bool RewardTrophy(int32 Trophy_ID);
+	bool RewardTrophy(const int32 Trophy_ID);
 
 	/**
 	 * Gets information for all trophies
@@ -484,7 +481,7 @@ public:
 	 * You can call UUEGameJoltAPI::FetchTrophies directly
 	 **/
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Fetch All Trophies"), Category = "GameJolt|Trophies")
-	void FetchAllTrophies(EGameJoltAchievedTrophies AchievedType);
+	void FetchAllTrophies(const EGameJoltAchievedTrophies AchievedType);
 
 	/**
 	 * Gets information for the selected trophies
@@ -492,7 +489,7 @@ public:
 	 * @param Tropies_ID An array of trophy IDs. An empty array will return all trophies
 	 */
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Fetch Trophies"), Category = "GameJolt|Trophies")
-	void FetchTrophies(EGameJoltAchievedTrophies AchievedType, TArray<int32> Trophies_ID);
+	void FetchTrophies(const EGameJoltAchievedTrophies AchievedType, const TArray<int32> Trophy_IDs);
 
 	/**
 	 * Gets the trophy information from the fetched trophies
@@ -507,7 +504,7 @@ public:
 	 * @return Whether the request could be send or not
 	 */
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Remove Rewarded Trophy"), Category = "GameJolt|Trophies")
-	bool RemoveRewardedTrophy(int32 Trophy_ID);
+	bool RemoveRewardedTrophy(const int32 Trophy_ID);
 
 	/**
 	 * Checks the success of a trophy removal
@@ -525,7 +522,7 @@ public:
 	 * @return True if the request succeded, false if not
 	**/
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Fetch Scoreboard"), Category = "GameJolt|Scoreboard")
-	bool FetchScoreboard(int32 ScoreLimit, int32 Table_id);
+	bool FetchScoreboard(const int32 ScoreLimit, const int32 Table_id);
 
 	/**
 	 * Gets the list of scores fetched with FetchScoreboard
@@ -544,7 +541,7 @@ public:
 	 * @return True if the request succeded, false if not
 	**/
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Add Score to Scoreboard"), Category = "GameJolt|Scoreboard")
-	bool AddScore(FString UserScore, int32 UserScore_Sort, FString GuestUser, FString extra_data, int32 table_id);
+	bool AddScore(const FString UserScore, const int32 UserScore_Sort, const FString GuestUser, const FString extra_data, const int32 table_id);
 
 	/**
 	 * Returns a list of high score tables for a game.
@@ -559,6 +556,27 @@ public:
 	*/
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Get Scoreboard Table"), Category = "GameJolt|Scoreboard")
 	TArray<FScoreTableInfo>  GetScoreboardTable();
+
+	/**
+	 * Fetches the rank of the specified score
+	 * Use "Get Rank of Score" / GetRank or the OnGetRank delegate to read the results
+	 * @param Score The numeric score value to look for
+	 * @param TableID The ID of the scoreboard to search. '0' means primary table
+	 * @return Whether the request could be send successfully or not
+	 */
+	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Fetch Rank of Score"), Category = "GameJolt|Scoreboard")
+	bool FetchRank(const int32 Score, const int32 TableID);
+
+	/**
+	 * Gets the rank of a highscore from the response data
+	 * 
+	 * If the score is not represented by any rank on the score table, the request will return the rank that is closest to the requested score.
+	 * 
+	 * @warning Make sure to call "Fetch Rank of Score" / FetchRank before this
+	 * @return The rank of the score
+	 */
+	UFUNCTION(BlueprintPure, meta = (DisplayName = "Get Rank of Score"), Category = "GameJolt|Scoreboard")
+	int32 GetRank();
 
 #pragma endregion
 
