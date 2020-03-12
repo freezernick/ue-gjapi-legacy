@@ -7,16 +7,25 @@
 	"Category": "GameJolt",
 	"CreatedBy": "FreezerNick",
 	"CreatedByURL": "https://gamejolt.com/@FreezerNick",
-	"DocsURL": "https://gitlab.com/f2p-entertainment/plugins/ue4/gj/ue4-gamejoltapi/-/wikis/home",
-	"SupportURL": "mailto:incoming+f2p-entertainment-plugins-ue4-gj-ue4-gamejoltapi-5318268-issue-@incoming.gitlab.com",
+	"DocsURL": "https://gitlab.com/f2p-entertainment/plugins/ue4-gamejoltapi/wikis/home",
+	"MarketplaceURL": "",
+	"SupportURL": "mailto:incoming+f2p-entertainment-plugins-ue4-gamejoltapi-5318268-issue-@incoming.gitlab.com",
 	"EnabledByDefault": false,
-	"CanContainContent": false,
-	"IsBetaVersion": false,
+	"CanContainContent": true,
+	"IsBetaVersion": true,
+	"IsExperimentalVersion": false,
+	"Installed": false,
 	"Modules": [
 		{
 			"Name": "GameJoltPlugin",
 			"Type": "Runtime",
-			"LoadingPhase": "Default"
+			"LoadingPhase": "Default",
+			"WhitelistPlatforms": [
+				"Win32",
+				"Win64",
+				"Linux",
+				"LinuxAArch64"
+			]
 		}
 	]
 }
