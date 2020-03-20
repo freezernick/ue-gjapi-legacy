@@ -121,7 +121,9 @@ struct FScoreInfo
 	
 	FScoreInfo()
 	{
-		TimeStamp = FDateTime();
+		TimeStamp = FDateTime::Now();
+		ScoreSort = 0;
+		UserID = 0;
 	}
 };
 
