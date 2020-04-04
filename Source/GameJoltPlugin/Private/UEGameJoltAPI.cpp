@@ -640,7 +640,7 @@ bool UUEGameJoltAPI::SendRequest(const FString& output, FString url)
 	url = TEXT("https://") + GJAPI_SERVER + GJAPI_ROOT + GJAPI_VERSION + url;
 	FString signature(FMD5::HashAnsiString(*(url + Game_PrivateKey))); //+ GJAPI_SERVER + url + Game_PrivateKey(TEXT("http://") + GJAPI_SERVER +
 	url += TEXT("&signature=") + signature;
-	UE_LOG(GJAPI, Error, TEXT("%s"), *url);
+	UE_LOG(GJAPI, Log, TEXT("%s"), *url);
 
 
 	TSharedRef< IHttpRequest > HttpRequest = FHttpModule::Get().CreateRequest();
