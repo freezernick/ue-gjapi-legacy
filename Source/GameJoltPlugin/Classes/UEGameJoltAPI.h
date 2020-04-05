@@ -175,7 +175,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTrophyRemoved, bool, bWasRemoved)
 /* Add Score */
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnScoreAdded, bool, bWasScoreAdded);
 /* Fetch Scoreboard */
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnScoreboardFetched, TArray<FScoreInfo>, Scores);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnScoreboardFetched, const TArray<FScoreInfo>&, Scores);
 /* Fetch Scoreboard Table */
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnScoreboardTableFetched, TArray<FScoreTableInfo>, ScoreboardTable);
 /* Fetch High-Score Rank */
@@ -527,10 +527,14 @@ public:
 
 	/**
 	 * Returns a list of scores either for a user or globally for a game
+	 * @param ScoreLimit The amount of scores you want to fetch. Default is 10, maximum is 100
+	 * @param Table_id The ID of the score table
+	 * @param BetterThan Fetch only scores better than this score sort value
+	 * @param WorseThan Fetch only scores worse than this score sort value
 	 * @return True if the request succeded, false if not
 	**/
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Fetch Scoreboard"), Category = "GameJolt|Scoreboard")
-	bool FetchScoreboard(const int32 ScoreLimit, const int32 Table_id);
+	bool FetchScoreboard(const int32 ScoreLimit, const int32 Table_id, const int32 BetterThan, const int32 WorseThan);
 
 	/**
 	 * Gets the list of scores fetched with FetchScoreboard
