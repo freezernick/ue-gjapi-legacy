@@ -170,6 +170,8 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSessionChecked, bool, bIsSessionS
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTrophiesFetched, TArray<FTrophyInfo>, Trophies);
 /* Remove Trophy */
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTrophyRemoved, bool, bWasRemoved);
+/* Add Score */
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnScoreAdded, bool, bWasScoreAdded);
 /* Fetch Scoreboard */
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnScoreboardFetched, TArray<FScoreInfo>, Scores);
 /* Fetch Scoreboard Table */
@@ -283,6 +285,9 @@ public:
 	FOnTrophyRemoved OnTrophyRemoved;
 
 	UPROPERTY(BlueprintAssignable, Category = "GameJolt|Events|Specific")
+	FOnScoreAdded OnScoreAdded;
+
+	UPROPERTY(BlueprintAssignable, Category = "GameJolt|Events|Specific")
 	FOnScoreboardFetched OnScoreboardFetched;
 
 	UPROPERTY(BlueprintAssignable, Category = "GameJolt|Events|Specific")
@@ -290,6 +295,7 @@ public:
 
 	UPROPERTY(BlueprintAssignable, Category = "GameJolt|Events|Specific")
 	FOnRankFetched OnRankFetched;
+
 	UPROPERTY(BlueprintAssignable, Category = "GameJolt|Events|Specific")
 	FOnTimeFetched OnTimeFetched;
 

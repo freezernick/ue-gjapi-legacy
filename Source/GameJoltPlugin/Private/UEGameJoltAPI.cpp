@@ -773,6 +773,9 @@ void UUEGameJoltAPI::OnReady(FHttpRequestPtr Request, FHttpResponsePtr Response,
 		case EGameJoltComponentEnum::GJ_TROHIES_REMOVE:
 			OnTrophyRemoved.Broadcast(GetTrophyRemovalStatus());
 			break;
+		case EGameJoltComponentEnum::GJ_SCORES_ADD:
+			OnScoreAdded.Broadcast(GetObject("response")->GetBool("success"));
+			break;
 		case EGameJoltComponentEnum::GJ_SCORES_FETCH:
 			OnScoreboardFetched.Broadcast(GetScoreboard());
 			break;
