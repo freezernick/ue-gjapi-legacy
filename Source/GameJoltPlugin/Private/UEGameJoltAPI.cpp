@@ -406,7 +406,7 @@ bool UUEGameJoltAPI::GetTrophyRemovalStatus()
 }
 
 /* Returns a list of scores either for a user or globally for a game */
-bool UUEGameJoltAPI::FetchScoreboard(int32 ScoreLimit, int32 Table_id)
+bool UUEGameJoltAPI::FetchScoreboard(int32 ScoreLimit, int32 Table_id, int32 BetterThan, int32 WorseThan)
 {
 	TArray<FTrophyInfo> returnTrophies;
 	bool ret = true;
@@ -423,8 +423,10 @@ bool UUEGameJoltAPI::FetchScoreboard(int32 ScoreLimit, int32 Table_id)
 	ret = SendRequest(output, TEXT("/scores/?format=json&game_id=") + GameIDString +
 		(!UserName.IsEmpty() || !bIsLoggedIn ? "&username=" : "") + UserName +
 		(bIsLoggedIn ? "&user_token=" : "") + UserToken +
-		(ScoreLimit > 0 ? "&limit=" : "") + (ScoreLimit > 0 ? ScoreLimitString : "") +
-		(Table_id > 0 ? "&table_id=" : "") + (Table_id > 0 ? TableIDString : ""));
+		(ScoreLimit > 0 ? "&limit=" + ScoreLimitString : "") +
+		(Table_id > 0 ? "&table_id=" + TableIDString : "") +
+		(BetterThan > 0 ? "&better_than=" + FString::FromInt(BetterThan) : "") +
+		(WorseThan > 0 ? "&worse_than=" + FString::FromInt(WorseThan) : ""));
 
 	if (!ret)
 	{
