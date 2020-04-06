@@ -1,6 +1,6 @@
 {
 	"FileVersion": 3,
-	"Version": 13,
+	"Version": 14,
 	"VersionName": "1.8",
 	"FriendlyName": "GameJolt Plugin",
 	"Description": " This plugin allows you to communicate with the GameJolt-Servers to use Scoreboards, Sessions, Cloud-Data-Storage and more.",
