@@ -30,7 +30,7 @@ UWorld* UUEGameJoltAPI::GetWorld() const
 }
 
 /* Sets information needed for all requests */
-void UUEGameJoltAPI::Init(const int32 GameID, const FString PrivateKey, const bool AutoLogin = false)
+bool UUEGameJoltAPI::Init(const int32 GameID, const FString PrivateKey, const bool AutoLogin = false)
 {
 	Game_ID = GameID;
 	Game_PrivateKey = PrivateKey;

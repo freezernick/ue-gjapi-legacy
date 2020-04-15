@@ -363,7 +363,6 @@ public:
 	 **/
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Init", AdvancedDisplay=2), Category = "GameJolt")
 	bool Init(const int32 GameID, const FString PrivateKey, const bool AutoLogin);
-	bool Init(const FString PrivateKey, const int32 GameID, const bool AutoLogin);
 
 private:
 
