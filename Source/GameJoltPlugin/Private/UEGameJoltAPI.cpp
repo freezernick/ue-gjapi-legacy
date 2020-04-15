@@ -7,6 +7,8 @@
 #include "GameJoltPluginModule.h"
 #include "Misc/DateTime.h"
 #include "Engine/World.h"
+#include "Misc/Paths.h"
+#include "Misc/FileHelper.h"
 
 /* Constructor */
 UUEGameJoltAPI::UUEGameJoltAPI(const class FObjectInitializer& PCIP) : Super(PCIP)
@@ -28,10 +30,32 @@ UWorld* UUEGameJoltAPI::GetWorld() const
 }
 
 /* Sets information needed for all requests */
-void UUEGameJoltAPI::Init(const int32 GameID, const FString PrivateKey)
+void UUEGameJoltAPI::Init(const int32 GameID, const FString PrivateKey, const bool AutoLogin = false)
 {
 	Game_ID = GameID;
 	Game_PrivateKey = PrivateKey;
+	if(!AutoLogin)
+	{
+		UE_LOG(GJAPI, Log, TEXT("Autologin is turned off!"));
+		return false;
+	}
+	
+	if(FPaths::FileExists(FPaths::Combine(FPaths::ProjectDir(), TEXT(".gj-credentials"))))
+		return false;
+
+	TArray<FString> strings;
+	FFileHelper::LoadFileToStringArray(strings, *FPaths::Combine(FPaths::ProjectDir(), TEXT(".gj-credentials")));
+	this->AutoLogin(strings[1], strings[2]);
+	return true;
+}
+
+void UUEGameJoltAPI::AutoLogin(const FString Name, const FString Token)
+{
+	FString output;
+	UserName = Name;
+	UserToken = Token;
+	LastActionPerformed = EGameJoltComponentEnum::GJ_USER_AUTOLOGIN;
+	SendRequest(output, TEXT("/users/auth/?format=json&game_id=") + FString::FromInt(Game_ID) + TEXT("&username=") + Name + TEXT("&user_token=") + Token);
 }
 
 /* Gets the time of the GameJolt servers */
@@ -747,6 +771,9 @@ void UUEGameJoltAPI::OnReady(FHttpRequestPtr Request, FHttpResponsePtr Response,
 	{
 		case EGameJoltComponentEnum::GJ_USER_AUTH:
 			OnUserAuthorized.Broadcast(isUserAuthorize());
+			break;
+		case EGameJoltComponentEnum::GJ_USER_AUTOLOGIN:
+			OnAutoLogin.Broadcast(isUserAuthorize());
 			break;
 		case EGameJoltComponentEnum::GJ_USER_FETCH:
 			OnUserFetched.Broadcast(GetUserInfo()[0]);

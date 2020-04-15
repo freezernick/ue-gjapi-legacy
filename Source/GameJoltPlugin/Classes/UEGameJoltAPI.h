@@ -12,6 +12,7 @@ UENUM(BlueprintType)
 enum class EGameJoltComponentEnum : uint8
 {
 	GJ_USER_AUTH		UMETA(DisplayName = "Authorize User"),
+	GJ_USER_AUTOLOGIN	UMETA(DisplayName = "Automatic Login"),
 	GJ_USER_FETCH		UMETA(DisplayName = "Fetch Current User"),
 	GJ_USERS_FETCH		UMETA(DisplayName = "Fetch Users"),
 	GJ_USER_FRIENDLIST	UMETA(DisplayName = "Fetch Friendlist"),
@@ -154,6 +155,8 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnFailed);
 
 /* Authorize User */
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnUserAuthorized, bool, bIsLoggedIn);
+/* Automatic Login */
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAutoLogin, bool, bIsLoggedIn);
 /* Get Current User Info */
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnUserFetched, FUserInfo, CurrentUserInfo);
 /* Get User Info*/
@@ -260,6 +263,9 @@ public:
 	FOnUserAuthorized OnUserAuthorized;
 
 	UPROPERTY(BlueprintAssignable, Category = "GameJolt|Events|Specific")
+	FOnAutoLogin OnAutoLogin;
+
+	UPROPERTY(BlueprintAssignable, Category = "GameJolt|Events|Specific")
 	FOnUserFetched OnUserFetched;
 
 	UPROPERTY(BlueprintAssignable, Category = "GameJolt|Events|Specific")
@@ -351,11 +357,18 @@ public:
 	 * Sets information needed for all requests
 	 * You can find these values in the GameJolt API section of your game's dashboard
 	 * @param PrivateKey The private key of your game 
-	 * @param GameID The id of your game 
+	 * @param GameID The id of your game
+	 * @param AutoLogin Whether to check for passed credentials by the GameJolt client or not
+	 * @return Whether the .gj-crendential file was found or not. Also false if AutoLogin is false
 	 **/
-	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Init"), Category = "GameJolt")
-	void Init(const int32 GameID, const FString PrivateKey);
-	void Init(const FString PrivateKey, const int32 GameID);
+	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Init", AdvancedDisplay=2), Category = "GameJolt")
+	bool Init(const int32 GameID, const FString PrivateKey, const bool AutoLogin);
+	bool Init(const FString PrivateKey, const int32 GameID, const bool AutoLogin);
+
+private:
+
+	void AutoLogin(const FString Username, const FString Token);
+
 
 #pragma region Session
 
