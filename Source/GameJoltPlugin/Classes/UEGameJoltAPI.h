@@ -44,6 +44,17 @@ enum class EGameJoltAchievedTrophies : uint8
 	GJ_ACHIEVEDTROPHY_GAME UMETA(DisplayName = "Unachieved Trophies")
 };
 
+
+/** Represents the possible values for the status of a session
+ * https://gamejolt.com/game-api/doc/sessions/ping
+ */
+UENUM(BlueprintType)
+enum class ESessionStatus : uint8
+{
+	Active,
+	Idle
+};
+
 /* Contains all available information about a user */
 USTRUCT(BlueprintType)
 struct FUserInfo
@@ -111,7 +122,9 @@ struct FScoreInfo
 	
 	FScoreInfo()
 	{
-		TimeStamp = FDateTime();
+		TimeStamp = FDateTime::Now();
+		ScoreSort = 0;
+		UserID = 0;
 	}
 };
 
@@ -162,8 +175,10 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSessionChecked, bool, bIsSessionS
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTrophiesFetched, TArray<FTrophyInfo>, Trophies);
 /* Remove Trophy */
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTrophyRemoved, bool, bWasRemoved);
+/* Add Score */
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnScoreAdded, bool, bWasScoreAdded);
 /* Fetch Scoreboard */
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnScoreboardFetched, TArray<FScoreInfo>, Scores);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnScoreboardFetched, const TArray<FScoreInfo>&, Scores);
 /* Fetch Scoreboard Table */
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnScoreboardTableFetched, TArray<FScoreTableInfo>, ScoreboardTable);
 /* Fetch High-Score Rank */
@@ -278,6 +293,9 @@ public:
 	FOnTrophyRemoved OnTrophyRemoved;
 
 	UPROPERTY(BlueprintAssignable, Category = "GameJolt|Events|Specific")
+	FOnScoreAdded OnScoreAdded;
+
+	UPROPERTY(BlueprintAssignable, Category = "GameJolt|Events|Specific")
 	FOnScoreboardFetched OnScoreboardFetched;
 
 	UPROPERTY(BlueprintAssignable, Category = "GameJolt|Events|Specific")
@@ -285,6 +303,7 @@ public:
 
 	UPROPERTY(BlueprintAssignable, Category = "GameJolt|Events|Specific")
 	FOnRankFetched OnRankFetched;
+
 	UPROPERTY(BlueprintAssignable, Category = "GameJolt|Events|Specific")
 	FOnTimeFetched OnTimeFetched;
 
@@ -343,11 +362,13 @@ public:
 	 * @return Whether the .gj-crendential file was found or not. Also false if AutoLogin is false
 	 **/
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Init", AdvancedDisplay=2), Category = "GameJolt")
+	bool Init(const int32 GameID, const FString PrivateKey, const bool AutoLogin);
 	bool Init(const FString PrivateKey, const int32 GameID, const bool AutoLogin);
 
 private:
 
 	void AutoLogin(const FString Username, const FString Token);
+
 
 #pragma region Session
 
@@ -360,10 +381,11 @@ private:
 
 	/**
 	 * Pings the Session. Every 30 to 60 seconds is good.
+	 * @param SessionStatus The status of the session. Can be "Active" or "Idle"
 	 * @return True if the request succeded, false if not
 	 **/
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Ping Session"), Category = "GameJolt|Sessions")
-	bool PingSession();
+	bool PingSession(ESessionStatus SessionStatus);
 
 	/**
 	 * Closes the session
@@ -518,10 +540,14 @@ private:
 
 	/**
 	 * Returns a list of scores either for a user or globally for a game
+	 * @param ScoreLimit The amount of scores you want to fetch. Default is 10, maximum is 100
+	 * @param Table_id The ID of the score table
+	 * @param BetterThan Fetch only scores better than this score sort value
+	 * @param WorseThan Fetch only scores worse than this score sort value
 	 * @return True if the request succeded, false if not
 	**/
 	UFUNCTION(BlueprintCallable, meta = (DisplayName = "Fetch Scoreboard"), Category = "GameJolt|Scoreboard")
-	bool FetchScoreboard(const int32 ScoreLimit, const int32 Table_id);
+	bool FetchScoreboard(const int32 ScoreLimit, const int32 Table_id, const int32 BetterThan, const int32 WorseThan);
 
 	/**
 	 * Gets the list of scores fetched with FetchScoreboard
