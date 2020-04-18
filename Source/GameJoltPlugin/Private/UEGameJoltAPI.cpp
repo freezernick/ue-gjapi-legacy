@@ -40,7 +40,7 @@ bool UUEGameJoltAPI::Init(const int32 GameID, const FString PrivateKey, const bo
 		return false;
 	}
 	
-	if(FPaths::FileExists(FPaths::Combine(FPaths::ProjectDir(), TEXT(".gj-credentials"))))
+	if(!FPaths::FileExists(FPaths::Combine(FPaths::ProjectDir(), TEXT(".gj-credentials"))))
 		return false;
 
 	TArray<FString> strings;
