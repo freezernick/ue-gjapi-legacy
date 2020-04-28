@@ -656,22 +656,28 @@ bool UUEGameJoltAPI::SendRequest(const FString& output, FString url)
 		return false;
 	}
 
+	if(Game_ID == 0)
+	{
+		UE_LOG(GJAPI, Error, TEXT("You must put in your game's ID before you can use any of the API functions"));
+		return false;
+	}
+
 	FString outStr;
 	TSharedRef<TJsonWriter<TCHAR>> JsonWriter = TJsonWriterFactory<TCHAR>::Create(&outStr);
 	//Start writing the response
 	WriteObject(JsonWriter, "", new FJsonValueObject(Data));
 	JsonWriter->Close();
+	
 	//Create URL First
-
 	url = TEXT("https://") + GJAPI_SERVER + GJAPI_ROOT + GJAPI_VERSION + url;
-	FString signature(FMD5::HashAnsiString(*(url + Game_PrivateKey))); //+ GJAPI_SERVER + url + Game_PrivateKey(TEXT("http://") + GJAPI_SERVER +
+	FString signature(FMD5::HashAnsiString(*(url + Game_PrivateKey)));
 	url += TEXT("&signature=") + signature;
 	UE_LOG(GJAPI, Log, TEXT("%s"), *url);
 
 
-	TSharedRef< IHttpRequest > HttpRequest = FHttpModule::Get().CreateRequest();
+	TSharedRef<IHttpRequest> HttpRequest = FHttpModule::Get().CreateRequest();
 	HttpRequest->SetVerb("POST");
-	HttpRequest->SetURL(CreateURL(url));
+	HttpRequest->SetURL(url);
 	HttpRequest->SetHeader("Content-Type", "application/json");
 	HttpRequest->SetContentAsString(output);
 	HttpRequest->OnProcessRequestComplete().BindUObject(this, &UUEGameJoltAPI::OnReady);
@@ -742,6 +748,7 @@ void UUEGameJoltAPI::FromString(const FString& dataString) {
 
 	if (!isDeserialized || !Data.IsValid()) {
 		UE_LOG(GJAPI, Error, TEXT("JSON data is invalid! Input:\n'%s'"), *dataString);
+		return;
 	}
 
 	// Assign the request content
@@ -761,7 +768,7 @@ void UUEGameJoltAPI::OnReady(FHttpRequestPtr Request, FHttpResponsePtr Response,
 	// Process the string
 	FromString(Response->GetContentAsString());
 
-	if(GetObject("response")->GetBool("success") == false && LastActionPerformed != EGameJoltComponentEnum::GJ_SESSION_CHECK)
+	if(!GetObject("response") || GetObject("response")->GetBool("success") == false && LastActionPerformed != EGameJoltComponentEnum::GJ_SESSION_CHECK)
 	{
 		OnFailed.Broadcast();
 		return;
@@ -826,9 +833,8 @@ void UUEGameJoltAPI::OnReady(FHttpRequestPtr Request, FHttpResponsePtr Response,
 /* Resets the saved data */
 void UUEGameJoltAPI::Reset()
 {
-	if (Data.IsValid()){
+	if (Data.IsValid())
 		Data.Reset();
-	}
 
 	// Created a new JSON Object
 	Data = MakeShareable(new FJsonObject());
