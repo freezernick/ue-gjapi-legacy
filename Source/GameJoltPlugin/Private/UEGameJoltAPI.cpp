@@ -7,6 +7,8 @@
 #include "GameJoltPluginModule.h"
 #include "Misc/DateTime.h"
 #include "Engine/World.h"
+#include "Misc/Paths.h"
+#include "Misc/FileHelper.h"
 
 /* Constructor */
 UUEGameJoltAPI::UUEGameJoltAPI(const class FObjectInitializer& PCIP) : Super(PCIP)
@@ -28,10 +30,32 @@ UWorld* UUEGameJoltAPI::GetWorld() const
 }
 
 /* Sets information needed for all requests */
-void UUEGameJoltAPI::Init(const int32 GameID, const FString PrivateKey)
+bool UUEGameJoltAPI::Init(const int32 GameID, const FString PrivateKey, const bool AutoLogin = false)
 {
 	Game_ID = GameID;
 	Game_PrivateKey = PrivateKey;
+	if(!AutoLogin)
+	{
+		UE_LOG(GJAPI, Log, TEXT("Autologin is turned off!"));
+		return false;
+	}
+	
+	if(!FPaths::FileExists(FPaths::Combine(FPaths::ProjectDir(), TEXT(".gj-credentials"))))
+		return false;
+
+	TArray<FString> strings;
+	FFileHelper::LoadFileToStringArray(strings, *FPaths::Combine(FPaths::ProjectDir(), TEXT(".gj-credentials")));
+	this->AutoLogin(strings[1], strings[2]);
+	return true;
+}
+
+void UUEGameJoltAPI::AutoLogin(const FString Name, const FString Token)
+{
+	FString output;
+	UserName = Name;
+	UserToken = Token;
+	LastActionPerformed = EGameJoltComponentEnum::GJ_USER_AUTOLOGIN;
+	SendRequest(output, TEXT("/users/auth/?format=json&game_id=") + FString::FromInt(Game_ID) + TEXT("&username=") + Name + TEXT("&user_token=") + Token);
 }
 
 /* Gets the time of the GameJolt servers */
@@ -632,22 +656,28 @@ bool UUEGameJoltAPI::SendRequest(const FString& output, FString url)
 		return false;
 	}
 
+	if(Game_ID == 0)
+	{
+		UE_LOG(GJAPI, Error, TEXT("You must put in your game's ID before you can use any of the API functions"));
+		return false;
+	}
+
 	FString outStr;
 	TSharedRef<TJsonWriter<TCHAR>> JsonWriter = TJsonWriterFactory<TCHAR>::Create(&outStr);
 	//Start writing the response
 	WriteObject(JsonWriter, "", new FJsonValueObject(Data));
 	JsonWriter->Close();
+	
 	//Create URL First
-
 	url = TEXT("https://") + GJAPI_SERVER + GJAPI_ROOT + GJAPI_VERSION + url;
-	FString signature(FMD5::HashAnsiString(*(url + Game_PrivateKey))); //+ GJAPI_SERVER + url + Game_PrivateKey(TEXT("http://") + GJAPI_SERVER +
+	FString signature(FMD5::HashAnsiString(*(url + Game_PrivateKey)));
 	url += TEXT("&signature=") + signature;
 	UE_LOG(GJAPI, Log, TEXT("%s"), *url);
 
 
-	TSharedRef< IHttpRequest > HttpRequest = FHttpModule::Get().CreateRequest();
+	TSharedRef<IHttpRequest> HttpRequest = FHttpModule::Get().CreateRequest();
 	HttpRequest->SetVerb("POST");
-	HttpRequest->SetURL(CreateURL(url));
+	HttpRequest->SetURL(url);
 	HttpRequest->SetHeader("Content-Type", "application/json");
 	HttpRequest->SetContentAsString(output);
 	HttpRequest->OnProcessRequestComplete().BindUObject(this, &UUEGameJoltAPI::OnReady);
@@ -718,6 +748,7 @@ void UUEGameJoltAPI::FromString(const FString& dataString) {
 
 	if (!isDeserialized || !Data.IsValid()) {
 		UE_LOG(GJAPI, Error, TEXT("JSON data is invalid! Input:\n'%s'"), *dataString);
+		return;
 	}
 
 	// Assign the request content
@@ -737,7 +768,7 @@ void UUEGameJoltAPI::OnReady(FHttpRequestPtr Request, FHttpResponsePtr Response,
 	// Process the string
 	FromString(Response->GetContentAsString());
 
-	if(GetObject("response")->GetBool("success") == false && LastActionPerformed != EGameJoltComponentEnum::GJ_SESSION_CHECK)
+	if(!GetObject("response") || GetObject("response")->GetBool("success") == false && LastActionPerformed != EGameJoltComponentEnum::GJ_SESSION_CHECK)
 	{
 		OnFailed.Broadcast();
 		return;
@@ -747,6 +778,9 @@ void UUEGameJoltAPI::OnReady(FHttpRequestPtr Request, FHttpResponsePtr Response,
 	{
 		case EGameJoltComponentEnum::GJ_USER_AUTH:
 			OnUserAuthorized.Broadcast(isUserAuthorize());
+			break;
+		case EGameJoltComponentEnum::GJ_USER_AUTOLOGIN:
+			OnAutoLogin.Broadcast(isUserAuthorize());
 			break;
 		case EGameJoltComponentEnum::GJ_USER_FETCH:
 			OnUserFetched.Broadcast(GetUserInfo()[0]);
@@ -799,9 +833,8 @@ void UUEGameJoltAPI::OnReady(FHttpRequestPtr Request, FHttpResponsePtr Response,
 /* Resets the saved data */
 void UUEGameJoltAPI::Reset()
 {
-	if (Data.IsValid()){
+	if (Data.IsValid())
 		Data.Reset();
-	}
 
 	// Created a new JSON Object
 	Data = MakeShareable(new FJsonObject());
