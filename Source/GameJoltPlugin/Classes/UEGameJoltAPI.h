@@ -65,12 +65,12 @@ enum class EDataStore : uint8
 UENUM(BlueprintType)
 enum class EDataOperation : uint8
 {
-	Add,
-	Substract,
-	Multiply,
-	Divide,
-	Append,
-	Prepend
+	add UMETA(DisplayName = "Add"),
+	substract UMETA(DisplayName = "Substract"),
+	multiply UMETA(DisplayName = "Multiply"),
+	divide UMETA(DisplayName = "Divide"),
+	append UMETA(DisplayName = "Append"),
+	prepend UMETA(DisplayName = "Prepend")
 };
 
 /* Contains all available information about a user */
@@ -617,14 +617,49 @@ private:
 
 #pragma region Data-Store
 
+	/**
+	 * Either posts data for a new key or changes data for an existing one.
+	 * @param Type Whether to store the key/value pair for all users (global) or for the current user (user)
+	 * @param Key The key/label for the data
+	 * @param Data The actual data to store
+	*/
 	UFUNCTION(BlueprintCallable)
-	void SetData(EDataStore Type, FString key, FString data);
+	void SetData(EDataStore Type, const FString Key, const FString Data);
 
+	/**
+	 * Tries to fetch the data stored under the specified key
+	 * @param Type Whether to fetch a global key/value pair or a key/value pair stored for the current user
+	 * @param Key The key/label of the data
+	 */
 	UFUNCTION(BlueprintCallable)
-	void FetchData(EDataStore Type, FString key);
+	void FetchData(EDataStore Type, FString Key);
 
+	/**
+	 * Updates already stored data
+	 * @param Type Whether to update a global key/value pair or a key/value pair stored of the current user
+	 * @param Key The key of the data to update
+	 * @param Operation The operation that should be performed on the data
+	 * @param Value The value for the selected operation
+	 */
 	UFUNCTION(BlueprintCallable)
-	void UpdateData(EDataStore Type, FString key, EDataOperation Operation, FString value);
+	void UpdateData(EDataStore Type, const FString Key, EDataOperation Operation, const FString Value);
+
+	/**
+	 * Deletes the data stored under the specified key
+	 * @param Type Whether to remove a global key/value pair or a key/value pair stored for the current user
+	 * @param Key The key of the data to remove
+	 */
+	UFUNCTION(BlueprintCallable)
+	void RemoveData(EDataStore Type, const FString Key);
+
+	/**
+	 * Gets the fetched data and converts them to a string or an integer (if possible)
+	 * @param Success Whether the data was found
+	 * @param DataAsString The fetched data as a string
+	 * @param DataAsInt The fetched data as an integer (0 if conversion was not possible)
+	 */
+	UFUNCTION(BlueprintCallable)
+	void GetData(bool& Success, FString& DataAsString, int32& DataAsInt);
 
 #pragma endregion
 
@@ -632,7 +667,7 @@ private:
 
 	/* Sends Request */
 	UFUNCTION(Blueprintcallable, meta = (Displayname = " Send Request"), Category = "GameJolt|Request|Advanced")
-	bool SendRequest(const FString& output, FString url);
+	bool SendRequest(const FString& output, FString url, bool bAppendUserInfo = true);
 
 	/** Gets nested post data from the object with the specified key
 	 * @param key The key of the post data value
