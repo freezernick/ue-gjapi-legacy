@@ -21,16 +21,16 @@ enum class EGameJoltComponentEnum : uint8
 	GJ_SESSION_CLOSE 	UMETA(DisplayName = "Close Session"),
 	GJ_SESSION_CHECK	UMETA(DisplayName = "Check Session"),
 	GJ_TROPHIES_FETCH 	UMETA(DisplayName = "Fetch Trophies"),
-	GJ_TROPHIES_ADD 	UMETA(DisplayName = "Add Achieved Trophies"),
+	GJ_TROPHIES_ADD 	UMETA(DisplayName = "Reward Trophy"),
 	GJ_TROHIES_REMOVE	UMETA(DisplayName = "Remove Rewarded Trophy"),
-	GJ_SCORES_FETCH 	UMETA(DisplayName = "Fetch Score"),
+	GJ_SCORES_FETCH 	UMETA(DisplayName = "Fetch Scores"),
 	GJ_SCORES_ADD 		UMETA(DisplayName = "Add Score"),
-	GJ_SCORES_TABLE 	UMETA(DisplayName = "Get Score Tables"),
+	GJ_SCORES_TABLE 	UMETA(DisplayName = "Fetch Tables"),
 	GJ_SCORES_RANK		UMETA(DisplayName = "Fetch Rank of Highscore"),
-	GJ_DATASTORE_FETCH	UMETA(DisplayName = "Fetch Data Store"),
-	GJ_DATASTORE_SET	UMETA(DisplayName = "Set Data Store"),
-	GJ_DATASTORE_UPDATE	UMETA(DisplayName = "Update Data Store"),
-	GJ_DATASTORE_REMOVE UMETA(DisplayName = "Get Keys"),
+	GJ_DATASTORE_FETCH	UMETA(DisplayName = "Fetch Data"),
+	GJ_DATASTORE_SET	UMETA(DisplayName = "Set Data"),
+	GJ_DATASTORE_UPDATE	UMETA(DisplayName = "Update Data"),
+	GJ_DATASTORE_REMOVE UMETA(DisplayName = "Fetch Keys"),
 	GJ_OTHER			UMETA(DisplayName = "Other"),
 	GJ_TIME				UMETA(DisplayName = "Fetch Server Time")
 };
@@ -53,6 +53,24 @@ enum class ESessionStatus : uint8
 {
 	Active,
 	Idle
+};
+
+UENUM(BlueprintType)
+enum class EDataStore : uint8
+{
+	Global,
+	User
+};
+
+UENUM(BlueprintType)
+enum class EDataOperation : uint8
+{
+	Add,
+	Substract,
+	Multiply,
+	Divide,
+	Append,
+	Prepend
 };
 
 /* Contains all available information about a user */
@@ -209,13 +227,6 @@ private:
 	
 	/* Reset Data*/
 	void Reset();
-
-	/**
-	 * Creates a http-URL from the input
-	 * @param inputURL The string to create the URL from
-	 * @return An URL starting with http://
-	*/
-	static FString CreateURL(FString inputURL);
 
 	void WriteObject(TSharedRef<TJsonWriter<TCHAR>> writer, FString key, FJsonValue* value);
 
@@ -601,6 +612,19 @@ private:
 	 */
 	UFUNCTION(BlueprintPure, meta = (DisplayName = "Get Rank of Score"), Category = "GameJolt|Scoreboard")
 	int32 GetRank();
+
+#pragma endregion
+
+#pragma region Data-Store
+
+	UFUNCTION(BlueprintCallable)
+	void SetData(EDataStore Type, FString key, FString data);
+
+	UFUNCTION(BlueprintCallable)
+	void FetchData(EDataStore Type, FString key);
+
+	UFUNCTION(BlueprintCallable)
+	void UpdateData(EDataStore Type, FString key, EDataOperation Operation, FString value);
 
 #pragma endregion
 
