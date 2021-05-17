@@ -10,6 +10,7 @@
 #include "Misc/Paths.h"
 #include "Misc/FileHelper.h"
 #include "Misc/SecureHash.h"
+#include "EngineMinimal.h"
 
 /* Constructor */
 UUEGameJoltAPI::UUEGameJoltAPI(const class FObjectInitializer& PCIP) : Super(PCIP)
